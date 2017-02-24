@@ -21,7 +21,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> 'cors'], function(){
 
 Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], function(){
 
-	//Route::resource('custodians', 'v1\CustodianController');
+	Route::resource('custodians', 'v1\CustodianController');
 
 	Route::resource('vehicles', 'v1\VehicleController');
 
@@ -32,21 +32,12 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 	Route::get('records/get/{filename}', [
 	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
 
-	// Route::get('departments', function(){
-	// 	return Department::all();
-	// });
-
-	// Route::get('user-types', function(){
-	// 	return UserType::all();
-	// });
-
-});
-
-Route::get('departments', function(){
+	Route::get('departments', function(){
 		return Department::all();
 	});
 
 	Route::get('user-types', function(){
 		return UserType::all();
 	});
-Route::resource('custodians', 'v1\CustodianController');
+
+});
