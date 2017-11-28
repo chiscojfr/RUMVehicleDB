@@ -29,8 +29,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::resource('records', 'v1\VehicleUsageRecordController');
 
-	Route::get('records/get/{filename}', [
-	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
+	Route::post('records/reconcile', 'v1\VehicleUsageRecordController@reconcile');
 
 	Route::get('departments', function(){
 		return Department::all();
@@ -45,3 +44,6 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 Route::get('/', function(){
 		return redirect('web/index.html');
 	});
+
+Route::get('records/get/{filename}', [
+	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);

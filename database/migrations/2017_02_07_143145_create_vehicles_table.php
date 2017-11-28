@@ -33,7 +33,7 @@ class CreateVehiclesTable extends Migration
             $table->string('insurance')->nullable();
             $table->string('purchase_price')->nullable();
             $table->date('inscription_date')->nullable();
-            $table->date('license_plate')->nullable();
+            $table->string('license_plate')->nullable();
 
             //Car Picture Attr.
             $table->string('filename')->nullable();

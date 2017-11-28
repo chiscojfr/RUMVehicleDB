@@ -160,7 +160,8 @@ return [
         App\Providers\v1\CustodianServiceProvider::class,
         App\Providers\v1\CardServiceProvider::class,
         App\Providers\v1\VehicleServiceProvider::class,
-        App\Providers\v1\VehicleUsageRecordServiceProvider::class
+        App\Providers\v1\VehicleUsageRecordServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -209,6 +210,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 
