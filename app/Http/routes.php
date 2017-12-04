@@ -47,5 +47,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 });
 
 Route::get('/', function(){
-		return 'If you see this, the server is working :)';
+		return redirect('web/index.html');
 	});
+
+
