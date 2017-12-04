@@ -16,7 +16,7 @@ class CreateVehicleUsageRecordsTable extends Migration
             $table->increments('id');
             $table->string('receipt_number');
             $table->date('date');
-            $table->string('provider_number');
+            $table->string('provider_number')->nullable();
             $table->string('purchase_type');
             $table->string('total_liters');
             $table->string('total_receipt');
