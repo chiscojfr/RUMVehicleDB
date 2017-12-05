@@ -20,7 +20,9 @@ class CardsService {
             'status' => $request['status'],
             'cardID' => $request['cardID'],
             'custodian_id' => $request['custodian_id'],
-            'department_id' => $request['department_id']
+            'department_id' => $request['department_id'],
+            //'auxiliary_custodian_id' => $request['auxiliary_custodian_id'],
+            
         ]);
 
         return response() -> json(['message' => 'The card has been created!'], 200);
@@ -42,7 +44,7 @@ class CardsService {
 	}
 
 	public function getCards(){
-		return $this->filterCards(Card::all());
+		return $this->filterCards(Card::paginate(10));
 	}
 
 	public function getCardInfo($id){
@@ -62,6 +64,10 @@ class CardsService {
 	        $card_custodian_name = Custodian::find($card->custodian_id)->name;
 	        $card->card_custodian_name =  $card_custodian_name;
 
+
+	        //$card_auxiliary_custodian_name = Custodian::find($card->auxiliary_custodian_id)->name;
+	        //$card->card_auxiliary_custodian_name =  $card_auxiliary_custodian_name;
+
 	        $data = [];
 
 			$data = [
@@ -74,8 +80,10 @@ class CardsService {
 				'cardID' => $card->cardID,
 				'custodian_id' => $card->custodian_id,
 	            'department_id' => $card->department_id,
+	            'auxiliary_custodian_id' => $card->auxiliary_custodian_id,
 	            'card_custodian_name' => $card->card_custodian_name,
-	            'card_department_name' => $card->card_department_name
+	            'card_department_name' => $card->card_department_name,
+	            //'card_auxiliary_custodian_name' => $card->card_auxiliary_custodian_name
 			];
 
 			return $data;
@@ -84,7 +92,7 @@ class CardsService {
 
 	public function getUserCards($id){
 
-		$card = Card::where('custodian_id', $id)->get();
+		$card = Card::where('custodian_id', $id)->paginate(10);
 		return $this->filterCards($card);
 		
 	}
@@ -114,6 +122,9 @@ class CardsService {
 	        $card_custodian_name = Custodian::find($card->custodian_id)->name;
 	        $card->card_custodian_name =  $card_custodian_name;
 
+	       // $card_auxiliary_custodian_name = Custodian::find($card->auxiliary_custodian_id)->name;
+	       // $card->card_auxiliary_custodian_name =  $card_auxiliary_custodian_name;
+
 			$entry = [
 				'id' => $card->id,
 				'number' => $card->number,
@@ -124,13 +135,68 @@ class CardsService {
 				'cardID' => $card->cardID,
 				'custodian_id' => $card->custodian_id,
 	            'department_id' => $card->department_id,
+	            'auxiliary_custodian_id' => $card->auxiliary_custodian_id,
 	            'card_custodian_name' => $card->card_custodian_name,
-	            'card_department_name' => $card->card_department_name
+	            'card_department_name' => $card->card_department_name,
+	            //'card_auxiliary_custodian_name' => $card->card_auxiliary_custodian_name
 			];
 			$data[] = $entry;
 		}
-
+		$data = [$cards];
 		return $data;
+	}
+
+	public function filter($request){
+
+		
+		//Test
+		$cards = new Card;
+		$queries = [];
+
+		$columns = [
+			'type',
+			'custodian_id',
+			'department_id',
+			'status'
+		];
+
+		foreach ($columns as $column) {
+			if(request()->has($column)){
+				
+				$cards = $cards->where($column, request($column));
+				$queries[$column] = request($column);
+			}
+		}
+		//dd($queries);
+		return $this->filterCards($cards->paginate(1));
+		//End of Test
+
+		// $cards = Card::all();
+  //       $card_filter_keys = $request->all();
+		// $filtered_cards = [];
+        
+  //       if($request->has('type')){
+  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
+	 //        	return $cards->type == $card_filter_keys['type'];
+	 //        });
+  //       }
+  //       else if($request->has('custodian_id')){
+  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
+	 //        	return $cards->custodian_id == $card_filter_keys['custodian_id'];
+	 //        });
+  //       }
+  //       else if($request->has('department_id')){
+  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
+	 //        	return $cards->department_id == $card_filter_keys['department_id'];
+	 //        });
+  //       }
+  //       else if($request->has('status')){
+  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
+	 //        	return $cards->status == $card_filter_keys['status'];
+	 //        });
+  //       }
+
+  //       return $this->filterCards($filtered_cards); 
 	}
 
 	public function getAuthenticatedUser(){

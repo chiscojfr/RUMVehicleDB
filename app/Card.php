@@ -9,7 +9,7 @@ class Card extends Model
 	protected $table = 'cards';
 
     protected $fillable = [
-        'number', 'name', 'type', 'expiry', 'status', 'cardID', 'custodian_id', 'department_id'
+        'number', 'name', 'type', 'expiry', 'status', 'cardID', 'custodian_id', 'department_id', 'auxiliary_custodian_id'
     ];
 
     public function custodian()

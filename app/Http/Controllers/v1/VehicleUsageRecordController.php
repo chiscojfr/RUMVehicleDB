@@ -227,9 +227,11 @@ class VehicleUsageRecordController extends Controller
                         $entry->vehicle_usage_record_id = $no_reconcile_record['id'];
 
                         if($no_reconcile_record['date'] == $date_from->toDateString()){
+
                             $entry->comments = '[Cutoff date!] Record stored in server but not reconciled!';
                         }
                         else{
+
                             $entry->comments = 'Record stored in server but not reconciled!';
                         }
                         $entry->save();
@@ -272,6 +274,7 @@ class VehicleUsageRecordController extends Controller
            $temp_record = VehicleUsageRecord::where('id', '=', $record['vehicle_usage_record_id'])->get()->toArray();
 
            if($temp_record != null){
+
                 if($record['comments'] =='[Cutoff date!] Record stored in server but not reconciled!'){
                     $temp_record = $this->records->getRecordInfo($record['vehicle_usage_record_id']);
                     $temp_record['WARNING'] = '[Cutoff date!] Record stored in server but not reconciled!';
@@ -299,11 +302,12 @@ class VehicleUsageRecordController extends Controller
                 'tipo_de_gasolina' => $record['pieza'],
                 'cantidad_litros' => $record['cantidad_litros'],
                 'total_del_solicitante' => $record['total_del_solicitante'],
-                'WARNING' => 'Record not reconcilied and it\'s not stored in server'
+                'WARNING' => 'Record no reconcilied and is not stored in server'
             ];
             $excel_no_reconciliated_records[] = $entry;
         }
 
+        //Agregar los %
 
         $data=['reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 

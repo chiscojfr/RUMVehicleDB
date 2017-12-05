@@ -78,7 +78,7 @@ class CardController extends Controller
             return $this->cards->updateCard($request, $id);
         }
         else {
-            return response()->json(['message' => 'Error: Only Admin can update vehicles.'], 401);
+            return response()->json(['message' => 'Error: Only Admin can update cards.'], 401);
         }
     }
 
@@ -90,9 +90,24 @@ class CardController extends Controller
             return $this->cards->deleteCard($id);
         }
         else {
-            return response()->json(['message' => 'Error: Only Admin can delete vehiles.'], 401);
+            return response()->json(['message' => 'Error: Only Admin can delete cards.'], 401);
         }
 
+    }
+
+    public function filter(Request $request){
+        
+        $user = $this->cards->getAuthenticatedUser();
+
+        //if($user->user_type_name == 'admin'){
+            $filtered_data = $this->cards->filter($request);
+            return response()->json(['filtered_data' => $filtered_data], 200);  
+        // }
+        // else {
+        //     return response()->json(['message' => 'Error: Only Admin can use this type of filter.'], 401);
+        // }
+
+        
     }
 
 

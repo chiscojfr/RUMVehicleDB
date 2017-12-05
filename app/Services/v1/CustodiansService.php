@@ -40,7 +40,7 @@ class CustodiansService {
 	}
 
 	public function getCustodians(){
-		return $this->filterCustodians(Custodian::all());
+		return $this->filterCustodians(Custodian::paginate(10));
 	}
 
 	public function getCustodianInfo($id){
@@ -116,7 +116,7 @@ class CustodiansService {
 			];
 			$data[] = $entry;
 		}
-
+		$data= [$custodians];
 		return $data;
 	}
 

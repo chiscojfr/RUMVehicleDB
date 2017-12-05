@@ -33,7 +33,7 @@ class VehiclesService {
 	}
 
 	public function getVehicles(){
-		return $this->filterVehicles(Vehicle::all());
+		return $this->filterVehicles(Vehicle::paginate(10));
 	}
 
 	public function getVehicleInfo($id){
@@ -89,7 +89,7 @@ class VehiclesService {
 
 	public function getUserVehicles($id){
 
-		$vehicle = Vehicle::where('custodian_id', $id)->get();
+		$vehicle = Vehicle::where('custodian_id', $id)->paginate(10);
 		return $this->filterVehicles($vehicle);
 		
 	}
@@ -148,7 +148,7 @@ class VehiclesService {
 			];
 			$data[] = $entry;
 		}
-
+		$data = [$vehicles];
 		return $data;
 	}
 

@@ -20,6 +20,7 @@ class CreateCardsTable extends Migration
             $table->string('type');
             $table->string('status')->nullable();
             $table->string('cardID');
+            //$table->integer('auxiliary_custodian_id')->unsigned();
 
             $table->integer('department_id')->unsigned();
             $table->integer('custodian_id')->unsigned();

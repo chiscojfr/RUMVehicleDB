@@ -19,6 +19,7 @@ class VehicleUsageRecordService {
 	public function createRecord(Request $request){
 
 		$file = Request::file('filename');
+		dd($file);
 		$extension = $file->getClientOriginalExtension();
 		Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
 		$entry = new VehicleUsageRecord();
@@ -82,7 +83,12 @@ class VehicleUsageRecordService {
 	}
 
 	public function getRecords(){
-		return $this->filterRecords(VehicleUsageRecord::all());
+		// $test = VehicleUsageRecord::all();
+		// $test2 = $test->filter(function ($test) {
+		//     return $test->receipt_number == '104295';
+		// });
+		// dd($test2->toArray());
+		return $this->filterRecords(VehicleUsageRecord::paginate(10));
 	}
 
 	public function getRecordInfo($id){
@@ -139,7 +145,7 @@ class VehicleUsageRecordService {
 
 	public function getUserRecords($id){
 
-		$record = VehicleUsageRecord::where('custodian_id', $id)->get();
+		$record = VehicleUsageRecord::where('custodian_id', $id)->paginate(10);
 		return $this->filterRecords($record);
 		
 	}
@@ -199,6 +205,8 @@ class VehicleUsageRecordService {
 			];
 			$data[] = $entry;
 		}
+
+		$data = [$records];
 
 		return $data;
 	}
