@@ -44,7 +44,7 @@ class CardsService {
 	}
 
 	public function getCards(){
-		return $this->filterCards(Card::paginate(10));
+		return $this->filterCards(Card::all());
 	}
 
 	public function getCardInfo($id){
@@ -142,7 +142,7 @@ class CardsService {
 			];
 			$data[] = $entry;
 		}
-		$data = [$cards];
+		//$data = [$cards];
 		return $data;
 	}
 
