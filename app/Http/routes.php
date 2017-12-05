@@ -47,6 +47,6 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 });
 
 Route::get('/', function(){
-		return '<br><br><center><h1>If you see this, the server is working! <br>XD</h1></center>';
+		return '<br><br><center><h1>If you see this, the server is working! <br>Diego es la Hostia en Git</h1></center>';
 	});
 
