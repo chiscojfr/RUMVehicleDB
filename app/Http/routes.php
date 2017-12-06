@@ -25,13 +25,15 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::resource('vehicles', 'v1\VehicleController');
 
-	Route::resource('cards', 'v1\CardController');
+	Route::resource('cards/', 'v1\CardController');
 
-	Route::resource('cards/filter', 'v1\CardController@filter');
+	Route::get('cards/filter', 'v1\CardController@filter');
 
 	Route::resource('records', 'v1\VehicleUsageRecordController');
 
 	Route::post('records/reconcile', 'v1\VehicleUsageRecordController@reconcile');
+
+	Route::get('stats', 'v1\DashboardController@stats');
 
 	Route::get('records/get/{filename}', [
 	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);

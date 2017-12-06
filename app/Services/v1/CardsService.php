@@ -44,7 +44,7 @@ class CardsService {
 	}
 
 	public function getCards(){
-		return $this->filterCards(Card::all());
+		return $this->filterCards(Card::paginate(10));
 	}
 
 	public function getCardInfo($id){
@@ -142,14 +142,12 @@ class CardsService {
 			];
 			$data[] = $entry;
 		}
-		//$data = [$cards];
+		$data = [$cards];
 		return $data;
 	}
 
 	public function filter($request){
 
-		
-		//Test
 		$cards = new Card;
 		$queries = [];
 
@@ -167,36 +165,9 @@ class CardsService {
 				$queries[$column] = request($column);
 			}
 		}
-		//dd($queries);
-		return $this->filterCards($cards->paginate(1));
-		//End of Test
-
-		// $cards = Card::all();
-  //       $card_filter_keys = $request->all();
-		// $filtered_cards = [];
-        
-  //       if($request->has('type')){
-  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
-	 //        	return $cards->type == $card_filter_keys['type'];
-	 //        });
-  //       }
-  //       else if($request->has('custodian_id')){
-  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
-	 //        	return $cards->custodian_id == $card_filter_keys['custodian_id'];
-	 //        });
-  //       }
-  //       else if($request->has('department_id')){
-  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
-	 //        	return $cards->department_id == $card_filter_keys['department_id'];
-	 //        });
-  //       }
-  //       else if($request->has('status')){
-  //       	$filtered_cards = $cards->filter(function ($cards) use ($card_filter_keys) {    
-	 //        	return $cards->status == $card_filter_keys['status'];
-	 //        });
-  //       }
-
-  //       return $this->filterCards($filtered_cards); 
+		
+		return $this->filterCards($cards->paginate(10));
+		
 	}
 
 	public function getAuthenticatedUser(){
