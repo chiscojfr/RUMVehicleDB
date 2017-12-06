@@ -25,19 +25,20 @@ class DashboardController extends Controller
         
     }
 
+    //Need to finish stats()...
     public function stats(){   
 
         $user = $this->cards->getAuthenticatedUser();
-        
+
         if($user->user_type_name == 'admin'){
 
             $custodians_count = Custodian::all()->count();
             $cards_count = Card::where('status', '=', 'Active' )->count();
             $vehicles_count = Vehicle::all()->count();
 
-            $this_month = Carbon::now()->month;
-            $total_monthly_expenses = VehicleUsageRecord::where('date', '=', '2017-06')->get();
-            dd($total_monthly_expenses);
+            //$this_month = Carbon::now()->month;
+            //$total_monthly_expenses = VehicleUsageRecord::where('date', '=', '2017-06')->get();
+            //dd($total_monthly_expenses);
 
             $stats = [
                 'registered_users' => $custodians_count,

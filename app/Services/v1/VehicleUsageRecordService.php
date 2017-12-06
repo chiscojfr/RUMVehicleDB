@@ -172,6 +172,9 @@ class VehicleUsageRecordService {
 			$record_department_name = Department::find( Card::find($record->card_id)->department_id )->name;
 	        $record->record_department_name =  $record_department_name;
 
+	        $record_department_id = Department::find( Card::find($record->card_id)->department_id )->id;
+	        $record->record_department_id =  $record_department_id;
+
 	        $record_custodian_name = Custodian::find( $record->custodian_id )->name;
 	        $record->record_custodian_name =  $record_custodian_name;
 
@@ -209,6 +212,30 @@ class VehicleUsageRecordService {
 		$data = [$records];
 
 		return $data;
+	}
+
+	public function filter($request){
+
+		$recrods = new VehicleUsageRecord;
+
+		$columns = [
+			'custodian_id',
+			'department_id',
+			'purchase_type',
+			'date',
+			'total_receipt'
+		];
+
+		foreach ($columns as $column) {
+			
+			if(request()->has($column)){
+
+				$recrods = $recrods->where($column, request($column));
+			}
+		}
+		
+		return $this->filterRecords($recrods->paginate(10));
+		
 	}
 
 	public function getAuthenticatedUser(){

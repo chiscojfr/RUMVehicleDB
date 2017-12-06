@@ -43,8 +43,32 @@ class CardsService {
     	}
 	}
 
-	public function getCards(){
-		return $this->filterCards(Card::paginate(10));
+	public function getCards($request){
+
+		if( count( $request->all() ) == 0){
+			return $this->filterCards(Card::paginate(10));
+		}
+		else{
+				$cards = new Card;
+				$queries = [];
+
+				$columns = [
+					'type',
+					'custodian_id',
+					'department_id',
+					'status'
+				];
+
+				foreach ($columns as $column) {
+					if(request()->has($column)){
+						
+						$cards = $cards->where($column, request($column));
+						$queries[$column] = request($column);
+					}
+				}
+				
+				return $this->filterCards($cards->paginate(10));
+			}
 	}
 
 	public function getCardInfo($id){
@@ -146,29 +170,29 @@ class CardsService {
 		return $data;
 	}
 
-	public function filter($request){
+	// public function filter($request){
 
-		$cards = new Card;
-		$queries = [];
+	// 	$cards = new Card;
+	// 	$queries = [];
 
-		$columns = [
-			'type',
-			'custodian_id',
-			'department_id',
-			'status'
-		];
+	// 	$columns = [
+	// 		'type',
+	// 		'custodian_id',
+	// 		'department_id',
+	// 		'status'
+	// 	];
 
-		foreach ($columns as $column) {
-			if(request()->has($column)){
+	// 	foreach ($columns as $column) {
+	// 		if(request()->has($column)){
 				
-				$cards = $cards->where($column, request($column));
-				$queries[$column] = request($column);
-			}
-		}
+	// 			$cards = $cards->where($column, request($column));
+	// 			$queries[$column] = request($column);
+	// 		}
+	// 	}
 		
-		return $this->filterCards($cards->paginate(10));
+	// 	return $this->filterCards($cards->paginate(10));
 		
-	}
+	// }
 
 	public function getAuthenticatedUser(){
 

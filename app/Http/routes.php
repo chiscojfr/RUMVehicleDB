@@ -23,11 +23,15 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::resource('custodians', 'v1\CustodianController');
 
+	Route::get('vehicles/filter', 'v1\VehicleController@filter');
+
 	Route::resource('vehicles', 'v1\VehicleController');
 
 	Route::resource('cards/', 'v1\CardController');
 
-	Route::get('cards/filter', 'v1\CardController@filter');
+	//Route::get('cards/filter', 'v1\CardController@filter');
+
+	Route::get('records/filter', 'v1\VehicleUsageRecordController@filter');
 
 	Route::resource('records', 'v1\VehicleUsageRecordController');
 

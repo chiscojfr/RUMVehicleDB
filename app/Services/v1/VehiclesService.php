@@ -152,6 +152,28 @@ class VehiclesService {
 		return $data;
 	}
 
+	public function filter($request){
+
+		$vehicles = new Vehicle;
+
+		$columns = [
+			'type',
+			'custodian_id',
+			'department_id',
+		];
+
+		foreach ($columns as $column) {
+			
+			if(request()->has($column)){
+
+				$vehicles = $vehicles->where($column, request($column));
+			}
+		}
+		
+		return $this->filterVehicles($vehicles->paginate(10));
+		
+	}
+
 	public function getAuthenticatedUser(){
 
         try {

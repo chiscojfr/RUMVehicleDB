@@ -118,6 +118,15 @@ class VehicleUsageRecordController extends Controller
               ->header('Content-Type', $entry->mime);
     }
 
+    public function filter(Request $request){
+        
+        $user = $this->records->getAuthenticatedUser();
+
+            $filtered_data = $this->records->filter($request);
+            return response()->json(['filtered_data' => $filtered_data], 200);  
+
+    }
+
     public function reconcile(Request $request)
     {
 

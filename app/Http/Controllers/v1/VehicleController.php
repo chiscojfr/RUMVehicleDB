@@ -97,5 +97,14 @@ class VehicleController extends Controller
 
     }
 
+    public function filter(Request $request){
+        
+        $user = $this->vehicles->getAuthenticatedUser();
+
+            $filtered_data = $this->vehicles->filter($request);
+            return response()->json(['filtered_data' => $filtered_data], 200);  
+
+    }
+
 
 }
