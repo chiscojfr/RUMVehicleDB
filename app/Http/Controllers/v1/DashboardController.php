@@ -25,7 +25,7 @@ class DashboardController extends Controller
         
     }
 
-    //Need to finish stats()...
+    //Return system stats about, total users, active cards, registered vehicles and total monthly expenses
     public function stats(){   
 
         $user = $this->cards->getAuthenticatedUser();
@@ -36,14 +36,19 @@ class DashboardController extends Controller
             $cards_count = Card::where('status', '=', 'Active' )->count();
             $vehicles_count = Vehicle::all()->count();
 
-            //$this_month = Carbon::now()->month;
-            //$total_monthly_expenses = VehicleUsageRecord::where('date', '=', '2017-06')->get();
-            //dd($total_monthly_expenses);
+            $today = Carbon::today();
+            $first_day_of_this_month = new Carbon('first day of this month');
+            $monthly_expenses = VehicleUsageRecord::whereBetween('date', [$first_day_of_this_month->subDay(), $today->addDay()])->get()->toArray();
+            $total_monthly_expenses = 0;
+            foreach ($monthly_expenses as $total_receipt) {
+                $total_monthly_expenses +=  $total_receipt['total_receipt'];
+            }
 
             $stats = [
                 'registered_users' => $custodians_count,
                 'active_credit_cards' => $cards_count,
-                'registered_vehicles' => $vehicles_count
+                'registered_vehicles' => $vehicles_count,
+                'total_monthly_expenses' => $total_monthly_expenses
             ];
 
 
