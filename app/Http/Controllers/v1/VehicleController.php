@@ -21,12 +21,12 @@ class VehicleController extends Controller
         $this->vehicles = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = $this->vehicles->getAuthenticatedUser();
         if($user->user_type_name == 'admin'){
 
-            $data = $this->vehicles->getVehicles();
+            $data = $this->vehicles->getVehicles($request);
 
             return response()->json(['data' => $data], 200);
         }
@@ -94,15 +94,6 @@ class VehicleController extends Controller
         else {
             return response()->json(['message' => 'Error: Only Admin can delete vehicles.'], 401);
         }
-
-    }
-
-    public function filter(Request $request){
-        
-        $user = $this->vehicles->getAuthenticatedUser();
-
-            $filtered_data = $this->vehicles->filter($request);
-            return response()->json(['filtered_data' => $filtered_data], 200);  
 
     }
 

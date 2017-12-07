@@ -39,8 +39,29 @@ class CustodiansService {
     	}
 	}
 
-	public function getCustodians(){
-		return $this->filterCustodians(Custodian::paginate(10));
+	public function getCustodians($request){
+
+		if( count( $request->all() ) == 0){
+			return $this->filterCustodians(Custodian::paginate(10));
+		}
+		else{
+
+			$custodian = new Custodian;
+
+			$columns = [
+				'department_id',
+			];
+
+			foreach ($columns as $column) {
+				
+				if(request()->has($column)){
+
+					$custodian = $custodian->where($column, request($column));
+				}
+			}
+			
+			return $this->filterCustodians($custodian->paginate(10));
+		}
 	}
 
 	public function getCustodianInfo($id){

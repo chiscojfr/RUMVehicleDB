@@ -170,30 +170,6 @@ class CardsService {
 		return $data;
 	}
 
-	// public function filter($request){
-
-	// 	$cards = new Card;
-	// 	$queries = [];
-
-	// 	$columns = [
-	// 		'type',
-	// 		'custodian_id',
-	// 		'department_id',
-	// 		'status'
-	// 	];
-
-	// 	foreach ($columns as $column) {
-	// 		if(request()->has($column)){
-				
-	// 			$cards = $cards->where($column, request($column));
-	// 			$queries[$column] = request($column);
-	// 		}
-	// 	}
-		
-	// 	return $this->filterCards($cards->paginate(10));
-		
-	// }
-
 	public function getAuthenticatedUser(){
 
         try {

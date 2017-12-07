@@ -33,12 +33,12 @@ class VehicleUsageRecordController extends Controller
         $this->records = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = $this->records->getAuthenticatedUser();
         if($user->user_type_name == 'admin'){
 
-            $data = $this->records->getRecords();
+            $data = $this->records->getRecords($request);
 
             return response()->json(['data' => $data], 200);
         }
@@ -116,15 +116,6 @@ class VehicleUsageRecordController extends Controller
  
         return (new Response($file, 200))
               ->header('Content-Type', $entry->mime);
-    }
-
-    public function filter(Request $request){
-        
-        $user = $this->records->getAuthenticatedUser();
-
-            $filtered_data = $this->records->filter($request);
-            return response()->json(['filtered_data' => $filtered_data], 200);  
-
     }
 
     public function reconcile(Request $request)

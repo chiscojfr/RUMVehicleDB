@@ -95,20 +95,5 @@ class CardController extends Controller
 
     }
 
-    // public function filter(Request $request){
-        
-    //     $user = $this->cards->getAuthenticatedUser();
-
-    //     //if($user->user_type_name == 'admin'){
-    //         $filtered_data = $this->cards->filter($request);
-    //         return response()->json(['filtered_data' => $filtered_data], 200);  
-    //     // }
-    //     // else {
-    //     //     return response()->json(['message' => 'Error: Only Admin can use this type of filter.'], 401);
-    //     // }
-
-        
-    // }
-
 
 }

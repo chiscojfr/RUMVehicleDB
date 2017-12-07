@@ -32,8 +32,30 @@ class VehiclesService {
     	}
 	}
 
-	public function getVehicles(){
-		return $this->filterVehicles(Vehicle::paginate(10));
+	public function getVehicles($request){
+
+		if( count( $request->all() ) == 0){
+			return $this->filterVehicles(Vehicle::paginate(10));
+		}
+		else{
+			$vehicles = new Vehicle;
+
+			$columns = [
+				'type',
+				'custodian_id',
+				'department_id',
+			];
+
+			foreach ($columns as $column) {
+
+				if(request()->has($column)){
+
+					$vehicles = $vehicles->where($column, request($column));
+				}
+			}
+			
+			return $this->filterVehicles($vehicles->paginate(10));
+		}
 	}
 
 	public function getVehicleInfo($id){
@@ -150,28 +172,6 @@ class VehiclesService {
 		}
 		$data = [$vehicles];
 		return $data;
-	}
-
-	public function filter($request){
-
-		$vehicles = new Vehicle;
-
-		$columns = [
-			'type',
-			'custodian_id',
-			'department_id',
-		];
-
-		foreach ($columns as $column) {
-			
-			if(request()->has($column)){
-
-				$vehicles = $vehicles->where($column, request($column));
-			}
-		}
-		
-		return $this->filterVehicles($vehicles->paginate(10));
-		
 	}
 
 	public function getAuthenticatedUser(){

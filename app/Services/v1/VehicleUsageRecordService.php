@@ -19,7 +19,7 @@ class VehicleUsageRecordService {
 	public function createRecord(Request $request){
 
 		$file = Request::file('filename');
-		dd($file);
+		//dd($file);
 		$extension = $file->getClientOriginalExtension();
 		Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
 		$entry = new VehicleUsageRecord();
@@ -82,13 +82,33 @@ class VehicleUsageRecordService {
     	}
 	}
 
-	public function getRecords(){
-		// $test = VehicleUsageRecord::all();
-		// $test2 = $test->filter(function ($test) {
-		//     return $test->receipt_number == '104295';
-		// });
-		// dd($test2->toArray());
-		return $this->filterRecords(VehicleUsageRecord::paginate(10));
+	public function getRecords(Request $request){
+
+		if( count( $request::all() ) == 0){
+
+			return $this->filterRecords(VehicleUsageRecord::paginate(10));
+		}
+		else{
+			$records = new VehicleUsageRecord;
+
+			$columns = [
+				'custodian_id',
+				'department_id',
+				'purchase_type',
+				'date',
+				'total_receipt'
+			];
+
+			foreach ($columns as $column) {
+				
+				if(request()->has($column)){
+
+					$records = $records->where($column, request($column));
+				}
+			}
+			
+			return $this->filterRecords($records->paginate(10));
+		}
 	}
 
 	public function getRecordInfo($id){

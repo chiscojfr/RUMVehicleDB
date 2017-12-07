@@ -18,17 +18,16 @@ class CustodianController extends Controller
         $this->custodians = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = $this->custodians->getAuthenticatedUser();
         if($user->user_type_name == 'admin'){
 
-            $data = $this->custodians->getCustodians();
+            $data = $this->custodians->getCustodians($request);
 
             return response()->json(['data' => $data], 200);
         }
         else {
-            //return response()->json(['mesaage' => 'Error: Only Admin can view this.'], 500);
              $data = $this->custodians->getCustodianInfo($user->id);
              return response()->json(['data' => $data], 200);
         }
