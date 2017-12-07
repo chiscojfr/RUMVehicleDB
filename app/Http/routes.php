@@ -25,7 +25,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::resource('vehicles', 'v1\VehicleController');
 
-	Route::resource('cards/', 'v1\CardController');
+	Route::resource('cards', 'v1\CardController');
 
 	Route::resource('records', 'v1\VehicleUsageRecordController');
 
