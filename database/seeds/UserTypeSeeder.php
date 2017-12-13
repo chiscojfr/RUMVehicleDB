@@ -16,6 +16,10 @@ class UserTypeSeeder extends Seeder
         ]);
 
         DB::table('user_types')->insert([
+            'role' => 'vehicle_admin'
+        ]);
+
+        DB::table('user_types')->insert([
             'role' => 'custodian'
         ]);
 

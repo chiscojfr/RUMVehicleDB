@@ -12,6 +12,7 @@ use JWTAuth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Request;
+use Carbon\Carbon;
 
 
 class VehicleUsageRecordService {
@@ -82,10 +83,9 @@ class VehicleUsageRecordService {
     	}
 	}
 
-	public function getRecords(Request $request){
+	public function getRecords($request){
 
 		if( count( $request::all() ) == 0){
-
 			return $this->filterRecords(VehicleUsageRecord::paginate(10));
 		}
 		else{
@@ -95,15 +95,27 @@ class VehicleUsageRecordService {
 				'custodian_id',
 				'department_id',
 				'purchase_type',
-				'date',
-				'total_receipt'
+				'date_from',
+				'date_to',
+				'total_receipt_from',
+				'total_receipt_to'
 			];
+
+			if(request()->has('date_from') && request()->has('date_to')){
+				$records = VehicleUsageRecord::whereBetween('date', [request('date_from'), request('date_to')]);
+			}
+
+			if(request()->has('total_receipt_from') && request()->has('total_receipt_to')){
+				$records = VehicleUsageRecord::whereBetween('total_receipt', [request('total_receipt_from'), request('total_receipt_to')]);
+			}
 
 			foreach ($columns as $column) {
 				
 				if(request()->has($column)){
-
-					$records = $records->where($column, request($column));
+					if($column != 'date_from' && $column != 'date_to' && $column != 'total_receipt_from' && $column != 'total_receipt_to'){
+						$records = $records->where($column, request($column));
+					}
+					
 				}
 			}
 			

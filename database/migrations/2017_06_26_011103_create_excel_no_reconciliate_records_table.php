@@ -22,8 +22,6 @@ class CreateExcelNoReconciliateRecordsTable extends Migration
             $table->string('cantidad_litros')->nullable();
             $table->string('total_del_solicitante')->nullable();
 
-
-
             $table->timestamps();
         });
     }

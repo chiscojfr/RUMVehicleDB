@@ -18,9 +18,9 @@ class CreateVehicleUsageRecordsTable extends Migration
             $table->date('date');
             $table->string('provider_number')->nullable();
             $table->string('purchase_type');
-            $table->string('total_liters');
-            $table->string('total_receipt');
-            $table->string('vehicle_mileage')->nullable();
+            $table->decimal('total_liters', 10, 3);
+            $table->decimal('total_receipt', 10, 2);
+            $table->decimal('vehicle_mileage', 10, 1)->nullable();
             $table->string('comments')->nullable();
 
             $table->string('filename')->nullable();

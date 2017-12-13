@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserRoleTable extends Migration
+class CreateRecordCorrectionStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,13 @@ class CreateUserRoleTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_user', function (Blueprint $table) {
+        Schema::create('record_correction_statuses', function (Blueprint $table) {
             $table->increments('id');
-
             $table->integer('custodian_id')->unsigned();
-            $table->integer('user_type_id')->unsigned();
-
+            $table->integer('record_id')->unsigned()->nullable();
+            $table->integer('status_type_id')->unsigned();
+            $table->string('record_not_found_info')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ class CreateUserRoleTable extends Migration
      */
     public function down()
     {
-        Schema::drop('role_user');
+        Schema::drop('record_correction_statuses');
     }
 }

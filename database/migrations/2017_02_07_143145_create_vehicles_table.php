@@ -19,7 +19,7 @@ class CreateVehiclesTable extends Migration
             $table->string('vin')->nullable();
             $table->string('color')->nullable();
             $table->string('year')->nullable();
-            $table->string('type')->nullable();
+            $table->string('type_id')->nullable();
             $table->string('serial_number')->nullable();
             $table->string('property_number')->nullable();
             $table->date('marbete_date')->nullable();
@@ -34,11 +34,6 @@ class CreateVehiclesTable extends Migration
             $table->string('purchase_price')->nullable();
             $table->date('inscription_date')->nullable();
             $table->string('license_plate')->nullable();
-
-            //Car Picture Attr.
-            $table->string('filename')->nullable();
-            $table->string('mime')->nullable();
-            $table->string('original_filename')->nullable();
 
             $table->integer('department_id')->unsigned();
             $table->integer('custodian_id')->unsigned();

@@ -16,5 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call(CustodianSeeder::class);
         $this->call(VehicleSeeder::class);
         $this->call(CardSeeder::class);
+        $this->call(VehicleTypesSeeder::class);
+        $this->call(VehicleUsageRecordSeeder::class);
+        $this->call(NotificationTypeSeeder::class); 
+        $this->call(NotificationStatusTypeSeeder::class);
     }
 }
