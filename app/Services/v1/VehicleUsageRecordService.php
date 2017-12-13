@@ -82,11 +82,11 @@ class VehicleUsageRecordService {
 	        return response() -> json(['message' => 'The record has been updated!', 'data' =>$entry], 200);
     	}
 	}
-
+	//param: $request = filter parameters
 	public function getRecords($request){
 
-		if( count( $request::all() ) == 0){
-			return $this->filterRecords(VehicleUsageRecord::paginate(10));
+		if( count( $request::all() ) == 0){		
+			return $this->filterRecords(VehicleUsageRecord::orderBy('date', 'desc')->paginate(10));
 		}
 		else{
 			$records = new VehicleUsageRecord;
@@ -105,8 +105,24 @@ class VehicleUsageRecordService {
 				$records = VehicleUsageRecord::whereBetween('date', [request('date_from'), request('date_to')]);
 			}
 
+			if(request()->has('date_from') && !request()->has('date_to')){
+				$records = VehicleUsageRecord::where('date','>=' ,request('date_from'));
+			}
+
+			if(!request()->has('date_from') && request()->has('date_to')){
+				$records = VehicleUsageRecord::where('date','<=' ,request('date_to'));
+			}
+
 			if(request()->has('total_receipt_from') && request()->has('total_receipt_to')){
 				$records = VehicleUsageRecord::whereBetween('total_receipt', [request('total_receipt_from'), request('total_receipt_to')]);
+			}
+
+			if(request()->has('total_receipt_from') && !request()->has('total_receipt_to')){
+				$records = VehicleUsageRecord::where('total_receipt', '>=', request('total_receipt_from'));
+			}
+
+			if(!request()->has('total_receipt_from') && request()->has('total_receipt_to')){
+				$records = VehicleUsageRecord::where('total_receipt', '<=', request('total_receipt_to'));
 			}
 
 			foreach ($columns as $column) {

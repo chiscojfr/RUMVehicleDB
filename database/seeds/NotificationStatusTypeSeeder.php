@@ -23,14 +23,5 @@ class NotificationStatusTypeSeeder extends Seeder
             'status_type_name' => 'Not Approved'
         ]);
 
-        DB::table('notifications')->insert([
-            'custodian_id' => '1',
-            'record_id' => '1',
-            'notification_type_id' => '1',
-            'was_read' => '1',
-            'record_not_found_info' => '1',
-
-
-        ]);
     }
 }
