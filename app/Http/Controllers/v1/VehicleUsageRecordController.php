@@ -144,7 +144,7 @@ class VehicleUsageRecordController extends Controller
        //Fetch server records and compare data to excel file
        if($r1){
               
-              Excel::selectSheetsByIndex(0)->load($route, function($sheet) {
+        $excel_records = Excel::selectSheetsByIndex(0)->load($route, function($sheet) {
 
                  $excel_records = $sheet->toArray();
                  $date_from = $excel_records[0]['fecha_de_la_transaccion'];
@@ -250,9 +250,9 @@ class VehicleUsageRecordController extends Controller
                         $entry->save();
                     }
 
-            });
+            })->get()->toArray();
         }
-
+       
         //Return reconcile_records, no_reconcile_server_records and no reconcile excel records
         $VehicleReconciledRecords = VehicleReconciledRecord::all()->toArray();
         $VehicleNoReconciledRecords = VehicleNoReconciledRecord::all()->toArray();
@@ -308,15 +308,34 @@ class VehicleUsageRecordController extends Controller
             $excel_no_reconciliated_records[] = $entry;
         }
 
-         $conciliation_percent = count($reconcile_records)/(count($reconcile_records) + count($no_reconcile_server_records))*100 ;
+         //Conciliation Percent
+         $conciliation_percent = number_format(((count($reconcile_records) / count($excel_records))*100), 2, '.', '');
 
          //Count de records en total
-         $total_excel_records = count($excel_no_reconciliated_records) + count($reconcile_records) + count($no_reconcile_server_records);
-         //Count de nuestros records
+         $total_excel_records = count($excel_records);
+
+         //Count of our server records
+         $date_from = $excel_records[0]['fecha_de_la_transaccion'];
+         $date_to = $excel_records[0]['fecha_de_la_transaccion'];
+             
+         //To find the date range in the excell record
+         foreach ($excel_records as $record){
+
+             if( $date_from->gt($record['fecha_de_la_transaccion'])){
+                $date_from = $record['fecha_de_la_transaccion'];
+             }
+             if( $date_to->lt($record['fecha_de_la_transaccion'])){
+                $date_to = $record['fecha_de_la_transaccion'];
+             }
+         }
+
+        //Query to find the server records who are inside in the date range of the excel record.
+        $server_records = VehicleUsageRecord::whereBetween('date', [$date_from, $date_to])->get()->toArray();
+        $total_server_records = count($server_records);
          //Total de Gastos en total
          //Total de gastos en nuestros server
 
-        $data=['conciliation_percent' => $conciliation_percent, 'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
+        $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 
         return response()->json(['data' => $data], 200);
     }
