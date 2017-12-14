@@ -338,10 +338,15 @@ class VehicleUsageRecordController extends Controller
         foreach ($excel_records as $record){
             $total_expenses_in_excel_records += $record['total_del_solicitante'];
         }
-        //dd(number_format($total_expenses_in_excel_records, 2, '.', ''));
+        $total_expenses_in_excel_records = number_format($total_expenses_in_excel_records, 2, '.', '');
         //Total de gastos en nuestros server
+        $total_expenses_in_server_records = 0;
+        foreach ($server_records as $record){
+            $total_expenses_in_server_records += $record['total_receipt'];
+        }
+        $total_expenses_in_server_records = number_format($total_expenses_in_server_records, 2, '.', '');
 
-        $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
+        $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'total_expenses_in_excel_records' => $total_expenses_in_excel_records,'total_expenses_in_server_records' => $total_expenses_in_server_records ,'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 
         return response()->json(['data' => $data], 200);
     }
