@@ -226,7 +226,7 @@ class VehicleUsageRecordController extends Controller
                         $entry = new VehicleNoReconciledRecord();
                         $entry->vehicle_usage_record_id = $no_reconcile_record['id'];
 
-                        if($no_reconcile_record['date'] == $date_from->toDateString()){
+                        if($no_reconcile_record['date'] == $date_to->toDateString()){
 
                             $entry->comments = '[Cutoff date!] Record stored in server but not reconciled!';
                         }
@@ -249,6 +249,7 @@ class VehicleUsageRecordController extends Controller
 
                         $entry->save();
                     }
+
             });
         }
 
@@ -307,9 +308,15 @@ class VehicleUsageRecordController extends Controller
             $excel_no_reconciliated_records[] = $entry;
         }
 
-        //Agregar los %
+         $conciliation_percent = count($reconcile_records)/(count($reconcile_records) + count($no_reconcile_server_records))*100 ;
 
-        $data=['reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
+         //Count de records en total
+         $total_excel_records = count($excel_no_reconciliated_records) + count($reconcile_records) + count($no_reconcile_server_records);
+         //Count de nuestros records
+         //Total de Gastos en total
+         //Total de gastos en nuestros server
+
+        $data=['conciliation_percent' => $conciliation_percent, 'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 
         return response()->json(['data' => $data], 200);
     }

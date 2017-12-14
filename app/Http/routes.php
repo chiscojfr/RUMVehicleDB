@@ -31,7 +31,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::post('records/reconcile', 'v1\VehicleUsageRecordController@reconcile');
 
-	Route::get('stats', 'v1\DashboardController@stats');
+	Route::get('dashboard/stats', 'v1\DashboardController@stats');
 
 	Route::get('records/get/{filename}', [
 	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
