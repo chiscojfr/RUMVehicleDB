@@ -24,7 +24,7 @@ class VehicleController extends Controller
     public function index(Request $request)
     {
         $user = $this->vehicles->getAuthenticatedUser();
-        if($user->user_type_name == 'admin'){
+        if($user->user_type_name == 'admin' || $user->user_type_name == 'vehicle_admin'){
 
             $data = $this->vehicles->getVehicles($request);
 
@@ -44,7 +44,7 @@ class VehicleController extends Controller
     public function store(Request $request)
     {   
         $user = $this->vehicles->getAuthenticatedUser();
-        if($user->user_type_name == 'admin'){
+        if($user->user_type_name == 'admin' || $user->user_type_name == 'vehicle_admin'){
 
             $vehicle = $this->vehicles->createVehicle($request);
 
@@ -64,7 +64,7 @@ class VehicleController extends Controller
         if($data == null ){
             return response()->json(['message' => 'Error: Vehicle not found!'],404);
         }
-        else if($user->user_type_name == 'admin'){
+        else if($user->user_type_name == 'admin' || $user->user_type_name == 'vehicle_admin'){
             return response()->json(['data' => $data], 200);
         }
         else{
@@ -76,7 +76,7 @@ class VehicleController extends Controller
     {   
         $user = $this->vehicles->getAuthenticatedUser();
 
-        if($user->user_type_name == 'admin'){
+        if($user->user_type_name == 'admin' || $user->user_type_name == 'vehicle_admin'){
             return $this->vehicles->updateVehicle($request, $id);
         }
         else {
@@ -88,7 +88,7 @@ class VehicleController extends Controller
     {   
         $user = $this->vehicles->getAuthenticatedUser();
 
-        if($user->user_type_name == 'admin'){
+        if($user->user_type_name == 'admin' || $user->user_type_name == 'vehicle_admin'){
             return $this->vehicles->deleteVehicle($id);
         }
         else {

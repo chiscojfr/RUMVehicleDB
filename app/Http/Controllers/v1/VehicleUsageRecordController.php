@@ -332,8 +332,14 @@ class VehicleUsageRecordController extends Controller
         //Query to find the server records who are inside in the date range of the excel record.
         $server_records = VehicleUsageRecord::whereBetween('date', [$date_from, $date_to])->get()->toArray();
         $total_server_records = count($server_records);
-         //Total de Gastos en total
-         //Total de gastos en nuestros server
+
+        //Total de Gastos en total
+        $total_expenses_in_excel_records = 0;
+        foreach ($excel_records as $record){
+            $total_expenses_in_excel_records += $record['total_del_solicitante'];
+        }
+        //dd(number_format($total_expenses_in_excel_records, 2, '.', ''));
+        //Total de gastos en nuestros server
 
         $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 
