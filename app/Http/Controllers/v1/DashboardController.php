@@ -30,8 +30,6 @@ class DashboardController extends Controller
 
         $user = $this->cards->getAuthenticatedUser();
 
-        if($user->user_type_name == 'admin'){
-
             $custodians_count = Custodian::all()->count();
             $cards_count = Card::where('status', '=', 'Active' )->count();
             $vehicles_count = Vehicle::all()->count();
@@ -54,10 +52,6 @@ class DashboardController extends Controller
 
             return response()->json(['stats' => $stats], 200);
 
-        }
-        else {
-            return response()->json(['message' => 'Error: Only Admin can view stats.'], 401);
-        }
 
     }
 
