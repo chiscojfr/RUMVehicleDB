@@ -161,9 +161,6 @@ class VehicleUsageRecordService {
 	        $record_card_name = Card::find($record->card_id)->name;
 	        $record->record_card_name =  $record_card_name;
 
-	        $record_vehicle_vin = Vehicle::find($record->vehicle_id)->vin;
-	        $record->record_vehicle_vin =  $record_vehicle_vin;
-
 	        $picture = route('getentry', $record->filename);
 	        $record->record_picture = $picture;
 
@@ -183,7 +180,6 @@ class VehicleUsageRecordService {
 				'record_department_name' => $record->record_department_name,
 				'record_custodian_name' => $record->record_custodian_name,
 				'record_card_name' => $record->record_card_name,
-				'record_vehicle_vin' => $record->record_vehicle_vin,
 				'record_picture'=>$record->record_picture
 			];
 
@@ -200,16 +196,17 @@ class VehicleUsageRecordService {
 
 	public function deleteRecord($id){
 
-		$vehicle = VehicleUsageRecord::find($id);
-		if ($vehicle == null){
-			return response() -> json(['message' => 'Vehicle not found!'], 404);
-		}
-		else{
+		return response() -> json(['message' => 'Delete records is not allowed!'], 403);
+		//$vehicle = VehicleUsageRecord::find($id);
+		// if ($vehicle == null){
+		// 	return response() -> json(['message' => 'Vehicle not found!'], 404);
+		// }
+		// else{
 
-			$vehicle = VehicleUsageRecord::destroy($id);
+		// 	$vehicle = VehicleUsageRecord::destroy($id);
 
-            return response() -> json(['message' => 'The record has been successfully deleted!'], 200);
-		}
+  //           return response() -> json(['message' => 'The record has been successfully deleted!'], 200);
+		// }
 		
 	}
 
@@ -229,8 +226,6 @@ class VehicleUsageRecordService {
 	        $record_card_name = Card::find($record->card_id)->name;
 	        $record->record_card_name =  $record_card_name;
 
-	        $record_vehicle_vin = Vehicle::find($record->vehicle_id)->vin;
-	        $record->record_vehicle_vin =  $record_vehicle_vin;
 
 	        $picture = route('getentry', $record->filename);
 	        $record->record_picture = $picture;
@@ -251,7 +246,6 @@ class VehicleUsageRecordService {
 				'record_department_name' => $record->record_department_name,
 				'record_custodian_name' => $record->record_custodian_name,
 				'record_card_name' => $record->record_card_name,
-				'record_vehicle_vin' => $record->record_vehicle_vin,
 				'record_picture'=>$record->record_picture
 			];
 			$data[] = $entry;
