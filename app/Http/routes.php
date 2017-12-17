@@ -11,10 +11,6 @@
 |
 */
 
-use App\Department;
-use App\UserType;
-use App\VehicleType;
-
 Route::group(['prefix' => 'api/v1', 'middleware'=> 'cors'], function(){
 	Route::post('/auth', 'Auth\AuthController@userAuth');
 	Route::get('/auth/me','Auth\AuthController@getAuthenticatedUser');
@@ -38,14 +34,14 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
 
 	Route::get('departments', function(){
-		return Department::all();
+		return App\Department::all();
 	});
 
 	Route::get('user-types', function(){
-		return UserType::all();
+		return App\UserType::all();
 	});
 	Route::get('vehicle-types', function(){
-		return VehicleType::all();
+		return App\VehicleType::all();
 	});
 
 });

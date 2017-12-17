@@ -6,6 +6,7 @@ use App\UserType;
 use App\Department;
 use App\Card;
 use App\Vehicle;
+use App\VehicleType;
 use JWTAuth;
 
 class VehiclesService {
@@ -33,7 +34,7 @@ class VehiclesService {
 	}
 
 	public function getVehicles($request){
-		
+
 		if( count( $request->all() ) == 0){
 			return $this->filterVehicles(Vehicle::paginate(10));
 		}
@@ -59,7 +60,7 @@ class VehiclesService {
 	}
 
 	public function getVehicleInfo($id){
-		
+
 		$vehicle = Vehicle::find($id);
 		if($vehicle == null){
 			$data = $vehicle;
@@ -75,6 +76,9 @@ class VehiclesService {
 	        $vehicle_custodian_name = Custodian::find($vehicle->custodian_id)->name;
 	        $vehicle->vehicle_custodian_name =  $vehicle_custodian_name;
 
+	        $vehicle_type_name = VehicleType::find($vehicle->type_id)->vehicle_type_name;
+	        $vehicle->vehicle_type_name = $vehicle_type_name;
+
 	        $data = [];
 
 			$data = [
@@ -84,7 +88,7 @@ class VehiclesService {
 				'model' => $vehicle->model,
 				'color' => $vehicle->color,
 				'year' => $vehicle->year,
-				'type' => $vehicle->type,
+				'type_id' => $vehicle->type_id,
 				'serial_number' => $vehicle->serial_number,
 				'property_number' => $vehicle->property_number,
 				'marbete_date' => $vehicle->marbete_date,
@@ -102,7 +106,8 @@ class VehiclesService {
 				'custodian_id' => $vehicle->custodian_id,
 	            'department_id' => $vehicle->department_id,
 	            'vehicle_custodian_name' => $vehicle->vehicle_custodian_name,
-	            'vehicle_department_name' => $vehicle->vehicle_department_name
+	            'vehicle_department_name' => $vehicle->vehicle_department_name,
+	            'vehicle_type_name' => $vehicle->vehicle_type_name,
 			];
 
 			return $data;
