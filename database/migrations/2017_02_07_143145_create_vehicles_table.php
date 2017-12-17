@@ -47,6 +47,7 @@ class CreateVehiclesTable extends Migration
                   ->on('custodians');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -13,6 +13,7 @@
 
 use App\Department;
 use App\UserType;
+use App\VehicleType;
 
 Route::group(['prefix' => 'api/v1', 'middleware'=> 'cors'], function(){
 	Route::post('/auth', 'Auth\AuthController@userAuth');
@@ -42,6 +43,9 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::get('user-types', function(){
 		return UserType::all();
+	});
+	Route::get('vehicle-types', function(){
+		return VehicleType::all();
 	});
 
 });

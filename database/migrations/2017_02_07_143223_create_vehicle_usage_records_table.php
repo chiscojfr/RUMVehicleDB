@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -33,17 +33,18 @@ class CreateVehicleUsageRecordsTable extends Migration
 
             $table->foreign('vehicle_id')
                   ->references('id')
-                  ->on('vehicles');
+                  ->on('vehicles')->onDelete('cascade');
 
             $table->foreign('card_id')
                   ->references('id')
-                  ->on('cards');
+                  ->on('cards')->onDelete('cascade');
 
             $table->foreign('custodian_id')
                   ->references('id')
-                  ->on('custodians');
+                  ->on('custodians')->onDelete('cascade');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

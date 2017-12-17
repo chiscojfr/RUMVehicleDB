@@ -33,7 +33,7 @@ class VehiclesService {
 	}
 
 	public function getVehicles($request){
-
+		
 		if( count( $request->all() ) == 0){
 			return $this->filterVehicles(Vehicle::paginate(10));
 		}
@@ -59,7 +59,7 @@ class VehiclesService {
 	}
 
 	public function getVehicleInfo($id){
-
+		
 		$vehicle = Vehicle::find($id);
 		if($vehicle == null){
 			$data = $vehicle;
