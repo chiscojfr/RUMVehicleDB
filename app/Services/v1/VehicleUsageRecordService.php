@@ -46,41 +46,41 @@ class VehicleUsageRecordService {
         return $entry;
 	}
 
-	//Pendiente
 	public function updateRecord(Request $request, $id){
 
-		$entry = VehicleUsageRecord::find($id);
-		if ($entry == null){
-			return response() -> json(['message' => 'Record not found!'], 404);
-		}
-		else{
+		return response() -> json(['message' => 'Update records is not allowed!'], 403);
+		// $entry = VehicleUsageRecord::find($id);
+		// if ($entry == null){
+		// 	return response() -> json(['message' => 'Record not found!'], 404);
+		// }
+		// else{
 
-	        $file = Request::file('filename');
-	        dd($file);
-			$extension = $file->getClientOriginalExtension();
-			Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
-			$entry = new VehicleUsageRecord();
+	 //        $file = Request::file('filename');
+	 //        dd($file);
+		// 	$extension = $file->getClientOriginalExtension();
+		// 	Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
+		// 	$entry = new VehicleUsageRecord();
 
-			$entry->receipt_number = Request::input('receipt_number');
-			$entry->date = Request::input('date');
-			$entry->provider_number = Request::input('provider_number');
-			$entry->purchase_type = Request::input('purchase_type');
-			$entry->total_liters = Request::input('total_liters');
-			$entry->total_receipt = Request::input('total_receipt');
-			$entry->vehicle_mileage = Request::input('vehicle_mileage');
-			$entry->vehicle_id = Request::input('vehicle_id');
-			$entry->card_id = Request::input('card_id');
-			$entry->custodian_id = Request::input('custodian_id');
-			$entry->comments = Request::input('comments');
+		// 	$entry->receipt_number = Request::input('receipt_number');
+		// 	$entry->date = Request::input('date');
+		// 	$entry->provider_number = Request::input('provider_number');
+		// 	$entry->purchase_type = Request::input('purchase_type');
+		// 	$entry->total_liters = Request::input('total_liters');
+		// 	$entry->total_receipt = Request::input('total_receipt');
+		// 	$entry->vehicle_mileage = Request::input('vehicle_mileage');
+		// 	$entry->vehicle_id = Request::input('vehicle_id');
+		// 	$entry->card_id = Request::input('card_id');
+		// 	$entry->custodian_id = Request::input('custodian_id');
+		// 	$entry->comments = Request::input('comments');
 
-			$entry->mime = $file->getClientMimeType();
-			$entry->original_filename = $file->getClientOriginalName();
-			$entry->filename = $file->getFilename().'.'.$extension;
+		// 	$entry->mime = $file->getClientMimeType();
+		// 	$entry->original_filename = $file->getClientOriginalName();
+		// 	$entry->filename = $file->getFilename().'.'.$extension;
 
-			$entry->update();
+		// 	$entry->update();
 
-	        return response() -> json(['message' => 'The record has been updated!', 'data' =>$entry], 200);
-    	}
+	 //        return response() -> json(['message' => 'The record has been updated!', 'data' =>$entry], 200);
+  //   	}
 	}
 	//param: $request = filter parameters
 	public function getRecords($request){

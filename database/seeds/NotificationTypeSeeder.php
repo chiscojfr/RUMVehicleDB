@@ -23,12 +23,5 @@ class NotificationTypeSeeder extends Seeder
             'notification_type_name' => 'Record not found'
         ]);
 
-        DB::table('notification_types')->insert([
-            'notification_type_name' => 'Correction approved!'
-        ]);
-
-        DB::table('notification_types')->insert([
-            'notification_type_name' => 'Correction not approved!'
-        ]);
     }
 }

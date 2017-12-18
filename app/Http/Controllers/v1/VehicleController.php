@@ -21,6 +21,15 @@ class VehicleController extends Controller
         $this->vehicles = $service;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get vehicle info depending user role.
+    |--------------------------------------------------------------------------
+    |
+    | Param: Filter parameters
+    | Return: Vehicle info
+    |
+    */
     public function index(Request $request)
     {
         $user = $this->vehicles->getAuthenticatedUser();
@@ -41,6 +50,15 @@ class VehicleController extends Controller
         
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Create new vehicle.
+    |--------------------------------------------------------------------------
+    |
+    | Param: New vehicle request
+    | Return: New veicle info
+    |
+    */
     public function store(Request $request)
     {   
         $user = $this->vehicles->getAuthenticatedUser();
@@ -56,6 +74,15 @@ class VehicleController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get single vehicle info
+    |--------------------------------------------------------------------------
+    |
+    | Param: vehicle_id
+    | Return: Vehicle info
+    |
+    */
     public function show($id)
     {   
         $user = $this->vehicles->getAuthenticatedUser();
@@ -72,6 +99,15 @@ class VehicleController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Update vehicle info 
+    |--------------------------------------------------------------------------
+    |
+    | Param: Request, vehicle_id 
+    | Reutrn: Updated vehicle info
+    |
+    */
     public function update(Request $request, $id)
     {   
         $user = $this->vehicles->getAuthenticatedUser();
@@ -84,6 +120,15 @@ class VehicleController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Delete vehicle  
+    |--------------------------------------------------------------------------
+    |
+    | Param: vehicle_id 
+    | Return: sucessful message
+    |
+    */
     public function destroy($id)
     {   
         $user = $this->vehicles->getAuthenticatedUser();

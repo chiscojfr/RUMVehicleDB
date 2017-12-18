@@ -43,6 +43,15 @@ class AuthController extends Controller
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | User login
+    |--------------------------------------------------------------------------
+    |
+    | Param: user credentials 
+    | Return: authentication token
+    |
+    */
     public function userAuth(Request $request){
         $credentials = $request->only('email','password');
         $token = null;
@@ -60,6 +69,14 @@ class AuthController extends Controller
         
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get auth user info 
+    |--------------------------------------------------------------------------
+    |
+    | Return user info
+    |
+    */
     public function getAuthenticatedUser(){
         
         try {
@@ -104,18 +121,4 @@ class AuthController extends Controller
         return response()->json(compact('data'));
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function create(array $data)
-    {
-        return Custodian::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-    }
 }

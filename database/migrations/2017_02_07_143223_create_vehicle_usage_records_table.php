@@ -44,7 +44,6 @@ class CreateVehicleUsageRecordsTable extends Migration
                   ->on('custodians')->onDelete('cascade');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

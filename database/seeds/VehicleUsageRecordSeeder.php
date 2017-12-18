@@ -54,33 +54,33 @@ class VehicleUsageRecordSeeder extends Seeder
         ]);
 
         //For testting purposes
-        // DB::table('vehicle_usage_records')->insert([
-        //     'date' => '2016-12-14',
-        //     'provider_number' => 'TOTAL MAYAGUEZ',
-        //     'receipt_number' => '59934',
-        //     'purchase_type' => 'Diesel',
-        //     'total_liters' => '74.3',
-        //     'total_receipt' => '54.75',
-        //     'vehicle_mileage' => '33675.2',
-        //     'comments' => 'This is a sample record!',
-        //     'vehicle_id' => '2',
-        //     'card_id' => '2',
-        //     'custodian_id' => '2',
-        // ]);
+        DB::table('vehicle_usage_records')->insert([
+            'date' => '2016-12-14',
+            'provider_number' => 'TOTAL MAYAGUEZ',
+            'receipt_number' => '59934',
+            'purchase_type' => 'Diesel',
+            'total_liters' => '74.3',
+            'total_receipt' => '54.75',
+            'vehicle_mileage' => '33675.2',
+            'comments' => 'This is a sample record!',
+            'vehicle_id' => '2',
+            'card_id' => '2',
+            'custodian_id' => '2',
+        ]);
 
-        // DB::table('vehicle_usage_records')->insert([
-        //     'date' => '2016-12-14',
-        //     'provider_number' => 'TOTAL MAYAGUEZ',
-        //     'receipt_number' => '104295',
-        //     'purchase_type' => 'Diesel',
-        //     'total_liters' => '48.02',
-        //     'total_receipt' => '32.51',
-        //     'vehicle_mileage' => '33675.2',
-        //     'comments' => 'This is a sample record!',
-        //     'vehicle_id' => '2',
-        //     'card_id' => '2',
-        //     'custodian_id' => '2',
-        // ]);
+        DB::table('vehicle_usage_records')->insert([
+            'date' => '2016-12-14',
+            'provider_number' => 'TOTAL MAYAGUEZ',
+            'receipt_number' => '104295',
+            'purchase_type' => 'Diesel',
+            'total_liters' => '48.02',
+            'total_receipt' => '32.51',
+            'vehicle_mileage' => '33675.2',
+            'comments' => 'This is a sample record!',
+            'vehicle_id' => '2',
+            'card_id' => '2',
+            'custodian_id' => '2',
+        ]);
         //End testing
     }
 }

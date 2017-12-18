@@ -18,6 +18,15 @@ class CustodianController extends Controller
         $this->custodians = $service;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get custodians info depending user role.
+    |--------------------------------------------------------------------------
+    |
+    | Param: Filter parameters
+    | Return: Custodians info
+    |
+    */
     public function index(Request $request)
     {
         $user = $this->custodians->getAuthenticatedUser();
@@ -34,6 +43,15 @@ class CustodianController extends Controller
         
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Create new custodian.
+    |--------------------------------------------------------------------------
+    |
+    | Param: New custodian request
+    | Return: New custodian info
+    |
+    */
     public function store(Request $request)
     {   
         $user = $this->custodians->getAuthenticatedUser();
@@ -49,6 +67,15 @@ class CustodianController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get single custodian info
+    |--------------------------------------------------------------------------
+    |
+    | Param: custodian_id
+    | Return: Custodian info
+    |
+    */
     public function show($id)
     {   
         $user = $this->custodians->getAuthenticatedUser();
@@ -65,6 +92,15 @@ class CustodianController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Update custodian info 
+    |--------------------------------------------------------------------------
+    |
+    | Param: request, custodian_id 
+    | Reutrn: Updated custodian  info
+    |
+    */
     public function update(Request $request, $id)
     {   
         $user = $this->custodians->getAuthenticatedUser();
@@ -77,7 +113,15 @@ class CustodianController extends Controller
         }
     }
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Delete custodian  
+    |--------------------------------------------------------------------------
+    |
+    | Param: custodian_id 
+    | Return: sucessful message
+    |
+    */
     public function destroy($id)
     {   
         $user = $this->custodians->getAuthenticatedUser();

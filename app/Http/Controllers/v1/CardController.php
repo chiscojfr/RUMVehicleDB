@@ -19,6 +19,15 @@ class CardController extends Controller
         $this->cards = $service;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get cards info depending user role.
+    |--------------------------------------------------------------------------
+    |
+    | Param: Filter parameters
+    | Return: Cards info
+    |
+    */
     public function index(Request $request)
     {
         $user = $this->cards->getAuthenticatedUser();
@@ -39,6 +48,15 @@ class CardController extends Controller
         
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Create new card.
+    |--------------------------------------------------------------------------
+    |
+    | Param: New card request
+    | Return: New card info
+    |
+    */
     public function store(Request $request)
     {   
         $user = $this->cards->getAuthenticatedUser();
@@ -54,6 +72,15 @@ class CardController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get single card info
+    |--------------------------------------------------------------------------
+    |
+    | Param: card_id
+    | Return: Card info
+    |
+    */
     public function show($id)
     {   
         $user = $this->cards->getAuthenticatedUser();
@@ -70,6 +97,16 @@ class CardController extends Controller
         }
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update card info 
+    |--------------------------------------------------------------------------
+    |
+    | Param: Request, card_id 
+    | Reutrn: Updated card info
+    |
+    */
     public function update(Request $request, $id)
     {   
         $user = $this->cards->getAuthenticatedUser();
@@ -82,6 +119,15 @@ class CardController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Delete card  
+    |--------------------------------------------------------------------------
+    |
+    | Param: card_id 
+    | Return: sucessful message
+    |
+    */
     public function destroy($id)
     {   
         $user = $this->cards->getAuthenticatedUser();

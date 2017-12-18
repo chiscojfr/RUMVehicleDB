@@ -13,6 +13,7 @@ use App\Card;
 use App\Vehicle;
 use App\VehicleUsageRecord;
 use App\VehicleReconciledRecord;
+use App\Notification;
 use App\Services\v1\CustodiansService;
 use App\Services\v1\CardsService;
 use App\Services\v1\VehiclesService;
@@ -33,6 +34,15 @@ class VehicleUsageRecordController extends Controller
         $this->records = $service;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get record info depending user role.
+    |--------------------------------------------------------------------------
+    |
+    | Param: Filter parameters
+    | Return: record info
+    |
+    */
     public function index(Request $request)
     {
         $user = $this->records->getAuthenticatedUser();
@@ -53,6 +63,15 @@ class VehicleUsageRecordController extends Controller
         
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Create new record.
+    |--------------------------------------------------------------------------
+    |
+    | Param: New record request
+    | Return: New record info
+    |
+    */
     public function store(Request $request)
     {   
         $user = $this->records->getAuthenticatedUser();
@@ -68,6 +87,15 @@ class VehicleUsageRecordController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Get single record info
+    |--------------------------------------------------------------------------
+    |
+    | Param: record_id
+    | Return: Record info
+    |
+    */
     public function show($id)
     {   
         $user = $this->records->getAuthenticatedUser();
@@ -84,6 +112,15 @@ class VehicleUsageRecordController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Update record info 
+    |--------------------------------------------------------------------------
+    |
+    | Param: Request, vehicle_id 
+    | Reutrn: Updated vehicle info
+    |
+    */
     public function update(Request $request, $id)
     {   
         $user = $this->records->getAuthenticatedUser();
@@ -96,6 +133,15 @@ class VehicleUsageRecordController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Delete record  
+    |--------------------------------------------------------------------------
+    |
+    | Param: record_id 
+    | Return: sucessful message
+    |
+    */
     public function destroy($id)
     {   
         $user = $this->records->getAuthenticatedUser();
@@ -108,7 +154,16 @@ class VehicleUsageRecordController extends Controller
         }
 
     }
-
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Get Record image  
+    |--------------------------------------------------------------------------
+    |
+    | Param: filename 
+    | Return: Record image
+    |
+    */
     public function get($filename)
     {
         $entry = VehicleUsageRecord::where('filename', '=', $filename)->firstOrFail();
@@ -118,6 +173,15 @@ class VehicleUsageRecordController extends Controller
               ->header('Content-Type', $entry->mime);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Reconcile server records with Total Petrolleum Records  
+    |--------------------------------------------------------------------------
+    |
+    | Param: .xls file 
+    | Return: Reconcilation results
+    |
+    */
     public function reconcile(Request $request)
     {
 
@@ -346,6 +410,29 @@ class VehicleUsageRecordController extends Controller
         }
         $total_expenses_in_server_records = number_format($total_expenses_in_server_records, 2, '.', '');
 
+        //Generate Notification
+        foreach ($no_reconcile_server_records as $record){
+
+            if( Notification::where('record_id', '=', $record['id'])->count() == 0  ){
+
+                $notification = new Notification();
+                $notification->custodian_id = $record['custodian_id'];
+                $notification->record_id = $record['id'];
+                $notification->was_read = false;
+
+                if($record['WARNING'] == 'Record stored in server but not reconciled!'){
+                    $notification->notification_type_id = 1;
+                }
+                if($record['WARNING'] == '[Cutoff date!] Record stored in server but not reconciled!'){
+                    $notification->notification_type_id = 2;
+                }
+                $notification->save();
+
+            }
+            
+        }
+
+        //Reconciliation Output
         $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'total_expenses_in_excel_records' => $total_expenses_in_excel_records,'total_expenses_in_server_records' => $total_expenses_in_server_records ,'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];
 
         return response()->json(['data' => $data], 200);
