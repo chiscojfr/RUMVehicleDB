@@ -153,7 +153,7 @@ class VehiclesService {
 				'model' => $vehicle->model,
 				'color' => $vehicle->color,
 				'year' => $vehicle->year,
-				'type' => $vehicle->type,
+				'type_id' => $vehicle->type_id,
 				'serial_number' => $vehicle->serial_number,
 				'property_number' => $vehicle->property_number,
 				'marbete_date' => $vehicle->marbete_date,

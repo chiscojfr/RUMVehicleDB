@@ -20,30 +20,34 @@ class VehicleUsageRecordService {
 	public function createRecord(Request $request){
 
 		$file = Request::file('filename');
-		//dd($file);
-		$extension = $file->getClientOriginalExtension();
-		Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
-		$entry = new VehicleUsageRecord();
+		if($file == null){
+			return null;
+		}
+		else{
+			$extension = $file->getClientOriginalExtension();
+			Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
+			$entry = new VehicleUsageRecord();
 
-		$entry->receipt_number = Request::input('receipt_number');
-		$entry->date = Request::input('date');
-		$entry->provider_number = Request::input('provider_number');
-		$entry->purchase_type = Request::input('purchase_type');
-		$entry->total_liters = Request::input('total_liters');
-		$entry->total_receipt = Request::input('total_receipt');
-		$entry->vehicle_mileage = Request::input('vehicle_mileage');
-		$entry->vehicle_id = Request::input('vehicle_id');
-		$entry->card_id = Request::input('card_id');
-		$entry->custodian_id = Request::input('custodian_id');
-		$entry->comments = Request::input('comments');
+			$entry->receipt_number = Request::input('receipt_number');
+			$entry->date = Request::input('date');
+			$entry->provider_number = Request::input('provider_number');
+			$entry->purchase_type = Request::input('purchase_type');
+			$entry->total_liters = Request::input('total_liters');
+			$entry->total_receipt = Request::input('total_receipt');
+			$entry->vehicle_mileage = Request::input('vehicle_mileage');
+			$entry->vehicle_id = Request::input('vehicle_id');
+			$entry->card_id = Request::input('card_id');
+			$entry->custodian_id = Request::input('custodian_id');
+			$entry->comments = Request::input('comments');
 
-		$entry->mime = $file->getClientMimeType();
-		$entry->original_filename = $file->getClientOriginalName();
-		$entry->filename = $file->getFilename().'.'.$extension;
+			$entry->mime = $file->getClientMimeType();
+			$entry->original_filename = $file->getClientOriginalName();
+			$entry->filename = $file->getFilename().'.'.$extension;
 
-		$entry->save();
+			$entry->save();
 
-        return $entry;
+	        return $entry;
+	    }
 	}
 
 	public function updateRecord(Request $request, $id){
@@ -277,6 +281,20 @@ class VehicleUsageRecordService {
 		}
 		
 		return $this->filterRecords($recrods->paginate(10));
+		
+	}
+
+	public function getCardRecords($id){
+		$records = VehicleUsageRecord::where('card_id', '=', $id);
+		
+		if($records->count() == 0){
+			return response()->json(['message' => 'Error: No records found for this card'],404);
+		}
+		else{
+			$records = $records->orderBy('date', 'desc');
+			$records = $this->filterRecords($records->paginate(10));	
+	        return response()->json(['data' => $records], 200);
+		}
 		
 	}
 

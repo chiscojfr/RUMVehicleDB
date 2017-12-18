@@ -79,7 +79,14 @@ class VehicleUsageRecordController extends Controller
 
             $record = $this->records->createRecord($request);
 
-            return response()->json(['message' => 'Record created successfully!',$record], 201);
+            if($record == null){
+                return response()->json(['message' => 'ERROR: Please enter a file.'], 406);
+            }
+            else{
+                return response()->json(['message' => 'Record created successfully!',$record], 201);
+            }   
+
+            
         }
         else {
             return response()->json(['message' => 'Error: Only Admin or Custodians can create new records.'], 401);
@@ -171,6 +178,19 @@ class VehicleUsageRecordController extends Controller
  
         return (new Response($file, 200))
               ->header('Content-Type', $entry->mime);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get records for an specific card 
+    |--------------------------------------------------------------------------
+    |
+    | Param: card_id 
+    | Return: Records for an specific card
+    |
+    */
+    public function getCardRecords($id){
+        return $this->records->getCardRecords($id);
     }
 
     /*

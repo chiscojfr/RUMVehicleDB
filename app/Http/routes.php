@@ -14,6 +14,8 @@
 Route::group(['prefix' => 'api/v1', 'middleware'=> 'cors'], function(){
 	Route::post('/auth', 'Auth\AuthController@userAuth');
 	Route::get('/auth/me','Auth\AuthController@getAuthenticatedUser');
+	Route::get('records/get/{filename}', [
+	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
 });	
 
 Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], function(){
@@ -26,6 +28,8 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::resource('records', 'v1\VehicleUsageRecordController');
 
+	Route::get('records/card/{id}', 'v1\VehicleUsageRecordController@getCardRecords');
+
 	Route::post('records/reconcile', 'v1\VehicleUsageRecordController@reconcile');
 
 	Route::get('dashboard/stats', 'v1\DashboardController@stats');
@@ -34,8 +38,8 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::put('dashboard/notifications/{id}', 'v1\DashboardController@notificationWasRead');
 
-	Route::get('records/get/{filename}', [
-	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
+	// Route::get('records/get/{filename}', [
+	// 'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
 
 	Route::get('departments', function(){
 		return App\Department::all();
