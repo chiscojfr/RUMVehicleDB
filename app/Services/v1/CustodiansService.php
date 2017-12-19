@@ -32,7 +32,11 @@ class CustodiansService {
 		}
 		else{
 
-	        $user->fill($request->all());
+			$user->fill($request->all());
+			if(request()->has('password')){
+				$user->password = bcrypt($request['password']);
+			}
+			
 	        $user->save();
 
 	        return response() -> json(['message' => 'The user has been updated!', 'data' =>$user], 200);
