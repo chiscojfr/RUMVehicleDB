@@ -17,7 +17,7 @@ class CreateRecordCorrectionStatusesTable extends Migration
             $table->integer('custodian_id')->unsigned();
             $table->integer('record_id')->unsigned()->nullable();
             $table->integer('status_type_id')->unsigned();
-            $table->string('record_not_found_info')->nullable();
+            //$table->string('record_not_found_info')->nullable();
             $table->timestamps();
         });
     }

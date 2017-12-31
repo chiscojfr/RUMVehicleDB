@@ -18,7 +18,11 @@ class CreateNotificationsTable extends Migration
             $table->integer('record_id')->unsigned()->nullable();
             $table->integer('notification_type_id')->unsigned();
             $table->boolean('was_read');
-            $table->string('record_not_found_info')->nullable();
+            $table->string('justification')->nullable();
+            $table->boolean('was_justified');
+            $table->boolean('was_archived');
+            $table->integer('status_type_id')->unsigned();
+            //$table->string('record_not_found_info')->nullable();
             $table->timestamps();
         });
     }

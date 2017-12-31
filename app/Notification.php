@@ -9,6 +9,6 @@ class Notification extends Model
     protected $table = 'notifications';
 
     protected $fillable = [
-        'custodian_id', 'record_id', 'was_read', 'record_not_found_info', 'notification_type_id'
+        'was_read', 'notification_type_id', 'was_justified', 'justification', 'was_archived', 'status_type_id'
     ];
 }

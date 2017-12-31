@@ -11,8 +11,13 @@ class NotificationStatusTypeSeeder extends Seeder
      */
     public function run()
     {
+
         DB::table('correction_status_types')->insert([
-            'status_type_name' => 'Pending'
+            'status_type_name' => 'Pending for custodian justification'
+        ]);
+
+        DB::table('correction_status_types')->insert([
+            'status_type_name' => 'Pending for approving'
         ]);
 
         DB::table('correction_status_types')->insert([

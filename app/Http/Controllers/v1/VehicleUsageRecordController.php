@@ -423,6 +423,7 @@ class VehicleUsageRecordController extends Controller
             $total_expenses_in_excel_records += $record['total_del_solicitante'];
         }
         $total_expenses_in_excel_records = number_format($total_expenses_in_excel_records, 2, '.', '');
+        
         //Total de gastos en nuestros server
         $total_expenses_in_server_records = 0;
         foreach ($server_records as $record){
@@ -430,7 +431,7 @@ class VehicleUsageRecordController extends Controller
         }
         $total_expenses_in_server_records = number_format($total_expenses_in_server_records, 2, '.', '');
 
-        //Generate Notification
+        //Generate Notifications
         foreach ($no_reconcile_server_records as $record){
 
             if( Notification::where('record_id', '=', $record['id'])->count() == 0  ){
@@ -439,12 +440,16 @@ class VehicleUsageRecordController extends Controller
                 $notification->custodian_id = $record['custodian_id'];
                 $notification->record_id = $record['id'];
                 $notification->was_read = false;
+                $notification->was_justified = false;
+                $notification->was_archived = false;
+                $notification->status_type_id = 1; //status_type_name = 'Pending for custodian justification' 
+
 
                 if($record['WARNING'] == 'Record stored in server but not reconciled!'){
-                    $notification->notification_type_id = 1;
+                    $notification->notification_type_id = 1; //notification_type_name = 'Not reconcile by: Data Entry Error'
                 }
                 if($record['WARNING'] == '[Cutoff date!] Record stored in server but not reconciled!'){
-                    $notification->notification_type_id = 2;
+                    $notification->notification_type_id = 2; //notification_type_name = 'Not reconcile by: Cutoff Date'
                 }
                 $notification->save();
 

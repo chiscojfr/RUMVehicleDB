@@ -13,7 +13,8 @@ use App\Card;
 use App\Vehicle;
 use App\VehicleUsageRecord;
 use App\Notification;
-use App\NotificationType;
+use App\NotificationType; 
+use App\RecordCorrectionStatus;
 use App\Services\v1\CardsService;
 use Carbon\Carbon;
 
@@ -74,18 +75,23 @@ class DashboardController extends Controller
         $user = $this->cards->getAuthenticatedUser();
 
         if( Notification::where('custodian_id', '=', $user->id)->count() > 0 ){
+
             $notifications = Notification::where('custodian_id', '=', $user->id);
-            $notifications = Notification::where('was_read', '=', 0)->get()->toArray();
-            //dd($notifications);
+            $notifications = Notification::where('was_archived', '=', 0)->get()->toArray();
 
             $data = [];
             foreach ($notifications as $notification) {
                 $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
+                $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
+
                 $entry =[
                     'id' => $notification['id'],
                     'notification_type' => $notification_type_name,
+                    'record_correction_status' => $record_correction_status,
                     'was_read' => $notification['was_read'],
+                    'was_justified' => $notification['was_justified'],
+                    'was_archived' => $notification['was_archived'],
                     'record_id' => $notification['record_id'],
                     'record_info' => $record,
                 ];
@@ -100,24 +106,89 @@ class DashboardController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Param: n/a
+    | Reutrn: Logged Admin Notifications
+    |
+    */
+    public function getAdminNotifications(){   
+
+        $user = $this->cards->getAuthenticatedUser();
+
+        if($user->user_type_name == 'admin'){
+            
+            $notifications = Notification::where('was_justified', '=', 1)->get()->toArray();
+
+            $data = [];
+            foreach ($notifications as $notification) {
+                $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
+                $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
+                $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
+
+                $entry =[
+                    'id' => $notification['id'],
+                    'notification_type' => $notification_type_name,
+                    'record_correction_status' => $record_correction_status,
+                    'was_justified' => $notification['was_justified'],
+                    'justification' => $notification['justification'],
+                    'record_id' => $notification['record_id'],
+                    'record_info' => $record,
+                ];
+                $data[] = $entry;
+            }
+          
+            return response()->json(['notifications' => $data], 200);
+        }
+        else{
+            return response()->json(['message' => 'Error: Only Admin can view their notifications.'], 401);
+        }
+
+    }
+
      /*
     |--------------------------------------------------------------------------
-    | Mark Notifications as 'was read'
+    | Edit Notifications: 'was read', 'was justified', 'justification text'
     |--------------------------------------------------------------------------
     |
     | Param: $request, $id
     | Reutrn: Updated notification
     |
     */
-    public function notificationWasRead(Request $request, $id){
+    public function notificationUpdate(Request $request, $id){
+
+        $user = $this->cards->getAuthenticatedUser();
+
         $notification = Notification::find($id);
         if($notification == null){
             return response() -> json(['message' => 'Notification not found!'], 404);
         }
         else{
-            $notification->fill($request->all());
-            $notification->save();
-            return response() -> json(['message' => 'The notification was read!', 'data' =>$notification], 200);
+
+            if($user->user_type_name == 'admin'){
+                $notification->fill($request->all());
+                $notification->save();
+                return response() -> json(['message' => 'The notification has been updated!', 'data' =>$notification], 200);
+            }
+            elseif ($user->user_type_name == 'custodian' || $user->user_type_name == 'auxiliary_custodian') {
+                
+                if(request()->has('was_read')){
+                    $notification->was_read = $request['was_read'];
+                }   
+
+                if(request()->has('justification')){
+                    $notification->justification = $request['justification'];
+                    $notification->was_justified = 1;
+                    $notification->status_type_id = 2;
+                }
+
+                $notification->save();
+                return response() -> json(['message' => 'The notification has been updated!', 'data' =>$notification], 200);
+            }
+            
         }
     }
 

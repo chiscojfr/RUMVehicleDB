@@ -65,7 +65,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'comments' => 'This is a sample record!',
             'vehicle_id' => '2',
             'card_id' => '2',
-            'custodian_id' => '2',
+            'custodian_id' => '5',
         ]);
 
         DB::table('vehicle_usage_records')->insert([

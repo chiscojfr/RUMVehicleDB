@@ -34,12 +34,11 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::get('dashboard/stats', 'v1\DashboardController@stats');
 
-	Route::get('dashboard/notifications', 'v1\DashboardController@getCustodianNotifications');
+	Route::get('dashboard/custodian/notifications', 'v1\DashboardController@getCustodianNotifications');
 
-	Route::put('dashboard/notifications/{id}', 'v1\DashboardController@notificationWasRead');
+	Route::get('dashboard/admin/notifications', 'v1\DashboardController@getAdminNotifications');
 
-	// Route::get('records/get/{filename}', [
-	// 'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
+	Route::put('dashboard/notifications/{id}', 'v1\DashboardController@notificationUpdate');
 
 	Route::get('departments', function(){
 		return App\Department::all();
@@ -49,6 +48,12 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 	});
 	Route::get('vehicle-types', function(){
 		return App\VehicleType::all();
+	});
+	Route::get('notification-types', function(){
+		return App\NotificationType::all();
+	});
+	Route::get('correction-status-types', function(){
+		return App\RecordCorrectionStatus::all();
 	});
 
 });
