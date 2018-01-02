@@ -32,11 +32,9 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 
 	Route::post('records/reconcile', 'v1\VehicleUsageRecordController@reconcile');
 
-	Route::get('dashboard/stats', 'v1\DashboardController@stats');
+	Route::get('dashboard/stats', 'v1\DashboardController@getStats');
 
-	Route::get('dashboard/custodian/notifications', 'v1\DashboardController@getCustodianNotifications');
-
-	Route::get('dashboard/admin/notifications', 'v1\DashboardController@getAdminNotifications');
+	Route::get('dashboard/notifications', 'v1\DashboardController@getNotifications');
 
 	Route::put('dashboard/notifications/{id}', 'v1\DashboardController@notificationUpdate');
 

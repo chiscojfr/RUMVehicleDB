@@ -23,6 +23,33 @@ class DashboardController extends Controller
 	public function __construct(CardsService $service){
         $this->cards = $service;
     }
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard stats 
+    |--------------------------------------------------------------------------
+    |
+    | Param: n/a
+    | Reutrn: (ADMIN) System stats about, total users, active cards, 
+    |         registered vehicles and total monthly expenses.
+    |         (Custodian) System stats about, custodian cards and monthly expenses.
+    |
+    */
+    public function getStats(){  
+
+        $user = $this->cards->getAuthenticatedUser();
+
+        if($user->user_type_name == 'admin'){
+            return $this->adminStats();
+        }
+        elseif($user->user_type_name == 'custodian' || $user->user_type_name == 'auxiliary_custodian'){
+            return $this->custodianStats();   
+        }
+        else{
+            return response()->json(['message' => 'Error: Only Admin or Custodians can view stats.'], 401);
+        }
+
+     }
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +61,7 @@ class DashboardController extends Controller
     |         registered vehicles and total monthly expenses.
     |
     */
-    public function stats(){   
+    private function adminStats(){   
 
         $user = $this->cards->getAuthenticatedUser();
 
@@ -63,6 +90,63 @@ class DashboardController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | Custodian dashboard stats 
+    |--------------------------------------------------------------------------
+    |
+    | Param: n/a
+    | Reutrn: System stats about, custodian cards and monthly expenses.
+    |
+    */
+    private function custodianStats(){   
+
+        $user = $this->cards->getAuthenticatedUser();
+
+        $cards = Card::where('custodian_id', '=', $user->id )->get();
+        $today = Carbon::today();
+        $first_day_of_this_month = new Carbon('first day of this month');
+        $monthly_expenses = VehicleUsageRecord::where('custodian_id','=', $user->id)->whereBetween('date', [$first_day_of_this_month->subDay(), $today->addDay()])->get()->toArray();
+        $total_monthly_expenses = 0;
+        foreach ($monthly_expenses as $expense) {
+            $total_monthly_expenses +=  $expense['total_receipt'];
+        }
+
+        $stats = [
+            'cards' => $cards,
+            'total_monthly_expenses' => $total_monthly_expenses
+        ];
+
+        return response()->json(['stats' => $stats], 200);
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custodian Notifications
+    |--------------------------------------------------------------------------
+    |
+    | Param: n/a
+    | Reutrn: Logged Admin and Custodian Notifications
+    |
+    */
+    public function getNotifications(){  
+
+        $user = $this->cards->getAuthenticatedUser();
+
+        if($user->user_type_name == 'admin'){
+            return $this->getAdminNotifications();
+        }
+
+        elseif($user->user_type_name == 'custodian'){
+            return $this->getCustodianNotifications();   
+        }
+        else{
+            return response()->json(['message' => 'Error: Only Admin or Custodians can view stats.'], 401);
+        }
+
+     }
+
+    /*
+    |--------------------------------------------------------------------------
     | Custodian Notifications
     |--------------------------------------------------------------------------
     |
@@ -70,7 +154,7 @@ class DashboardController extends Controller
     | Reutrn: Logged Custodian Notifications
     |
     */
-    public function getCustodianNotifications(){   
+    private function getCustodianNotifications(){   
 
         $user = $this->cards->getAuthenticatedUser();
 
@@ -91,6 +175,7 @@ class DashboardController extends Controller
                     'record_correction_status' => $record_correction_status,
                     'was_read' => $notification['was_read'],
                     'was_justified' => $notification['was_justified'],
+                    'due_date' => $notification['due_date'],
                     'was_archived' => $notification['was_archived'],
                     'record_id' => $notification['record_id'],
                     'record_info' => $record,
@@ -115,7 +200,7 @@ class DashboardController extends Controller
     | Reutrn: Logged Admin Notifications
     |
     */
-    public function getAdminNotifications(){   
+    private function getAdminNotifications(){   
 
         $user = $this->cards->getAuthenticatedUser();
 

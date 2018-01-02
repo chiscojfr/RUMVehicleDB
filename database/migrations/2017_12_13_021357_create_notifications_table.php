@@ -22,6 +22,7 @@ class CreateNotificationsTable extends Migration
             $table->boolean('was_justified');
             $table->boolean('was_archived');
             $table->integer('status_type_id')->unsigned();
+            $table->date('due_date');
             //$table->string('record_not_found_info')->nullable();
             $table->timestamps();
         });

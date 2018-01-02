@@ -443,6 +443,7 @@ class VehicleUsageRecordController extends Controller
                 $notification->was_justified = false;
                 $notification->was_archived = false;
                 $notification->status_type_id = 1; //status_type_name = 'Pending for custodian justification' 
+                $notification->due_date = Carbon::today()->addWeeks(1);
 
 
                 if($record['WARNING'] == 'Record stored in server but not reconciled!'){

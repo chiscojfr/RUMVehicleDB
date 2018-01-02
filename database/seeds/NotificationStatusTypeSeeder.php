@@ -17,7 +17,7 @@ class NotificationStatusTypeSeeder extends Seeder
         ]);
 
         DB::table('correction_status_types')->insert([
-            'status_type_name' => 'Pending for approving'
+            'status_type_name' => 'Pending for approval'
         ]);
 
         DB::table('correction_status_types')->insert([
