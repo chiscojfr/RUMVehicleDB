@@ -42,7 +42,7 @@ class VehiclesService {
 			$vehicles = new Vehicle;
 
 			$columns = [
-				'type',
+				'type_id',
 				'custodian_id',
 				'department_id',
 			];
