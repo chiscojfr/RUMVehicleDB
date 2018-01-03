@@ -28,6 +28,10 @@ use App\Department;
 use App\VehicleNoReconciledRecord;
 use App\ExcelNoReconciliateRecord;
 
+use App\ReportVehicleReconciledRecord;
+use App\ReportVehicleNoReconciledRecord;
+use App\ReportExcelNoReconciliateRecord;
+
 class VehicleUsageRecordController extends Controller
 {
     public function __construct(VehicleUsageRecordService $service){
@@ -246,7 +250,7 @@ class VehicleUsageRecordController extends Controller
                  }
 
                  //Query to find the server records who are inside in the date range of the excel record.
-                 $server_records = VehicleUsageRecord::whereBetween('date', [$date_from, $date_to])->get()->toArray();
+                 $server_records = VehicleUsageRecord::whereBetween('date', [$date_from->startOfDay(), $date_to->endOfDay()])->get()->toArray();
 
                  $reconcile_records = array();
                  $no_reconcile_records = $server_records;
@@ -323,6 +327,7 @@ class VehicleUsageRecordController extends Controller
 
                     foreach ($no_reconcile_records_excel as $no_reconcile_record){
                         $entry = new ExcelNoReconciliateRecord();
+                        $entry->cliente = $no_reconcile_record['cliente'];
                         $entry->fecha_de_la_transaccion = $no_reconcile_record['fecha_de_la_transaccion']->toDateString();
                         $entry->ubicacion_de_compra = $no_reconcile_record['ubicacion_de_compra'];
                         $entry->numero_de_transaccion = $no_reconcile_record['numero_de_transaccion'];
@@ -332,6 +337,51 @@ class VehicleUsageRecordController extends Controller
                         $entry->total_del_solicitante = $no_reconcile_record['total_del_solicitante'];
 
                         $entry->save();
+                    }
+
+                    //Save records to reports tables
+                    foreach ($reconcile_records as $reconcile_record){
+
+                        if( ReportVehicleReconciledRecord::where('vehicle_usage_record_id', '=', $reconcile_record['id'])->count() == 0  ){
+                            $entry = new ReportVehicleReconciledRecord();
+                            $entry->vehicle_usage_record_id = $reconcile_record['id'];
+                            $entry->comments = 'Record Concilied!';
+                            $entry->save();
+                        }
+                    }
+
+                    foreach ($no_reconcile_records as $no_reconcile_record){
+                        if( ReportVehicleNoReconciledRecord::where('vehicle_usage_record_id', '=', $no_reconcile_record['id'])->count() == 0  ){
+                            $entry = new ReportVehicleNoReconciledRecord();
+                            $entry->vehicle_usage_record_id = $no_reconcile_record['id'];
+
+                            if($no_reconcile_record['date'] == $date_to->toDateString()){
+
+                                $entry->comments = '[Cutoff date!] Record stored in server but not reconciled!';
+                            }
+                            else{
+
+                                $entry->comments = 'Record stored in server but not reconciled!';
+                            }
+                            $entry->save();
+                        }
+                    }
+
+                    foreach ($no_reconcile_records_excel as $no_reconcile_record){
+                        if( ReportExcelNoReconciliateRecord::where('id_de_transaccion', '=', $no_reconcile_record['id_de_transaccion'])->count() == 0  ){
+                            $entry = new ReportExcelNoReconciliateRecord();
+                            $entry->fecha_de_la_transaccion = $no_reconcile_record['fecha_de_la_transaccion']->toDateString();
+                            $entry->id_de_transaccion = $no_reconcile_record['id_de_transaccion']; 
+                            $entry->cliente = $no_reconcile_record['cliente'];
+                            $entry->ubicacion_de_compra = $no_reconcile_record['ubicacion_de_compra'];
+                            $entry->numero_de_transaccion = $no_reconcile_record['numero_de_transaccion'];
+                            $entry->nombre_de_la_tarjeta = $no_reconcile_record['nombre_de_la_tarjeta'];
+                            $entry->pieza = $no_reconcile_record['pieza'];
+                            $entry->cantidad_litros = $no_reconcile_record['cantidad'];
+                            $entry->total_del_solicitante = $no_reconcile_record['total_del_solicitante'];
+
+                            $entry->save();
+                        }
                     }
 
             })->get()->toArray();
@@ -380,6 +430,7 @@ class VehicleUsageRecordController extends Controller
         $excel_no_reconciliated_records = [];
         foreach ($excel_no_reconciliated_record as $record){
             $entry = [
+                'número_de_cliente' => $record['cliente'],
                 'fecha_de_la_transaccion' => $record['fecha_de_la_transaccion'],
                 'ubicacion_de_compra' => $record['ubicacion_de_compra'],
                 'numero_de_transaccion' => $record['numero_de_transaccion'],
@@ -414,7 +465,7 @@ class VehicleUsageRecordController extends Controller
          }
 
         //Query to find the server records who are inside in the date range of the excel record.
-        $server_records = VehicleUsageRecord::whereBetween('date', [$date_from, $date_to])->get()->toArray();
+        $server_records = VehicleUsageRecord::whereBetween('date', [$date_from->startOfDay(), $date_to->endOfDay()])->get()->toArray();
         $total_server_records = count($server_records);
 
         //Total de Gastos en total

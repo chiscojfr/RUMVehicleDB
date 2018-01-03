@@ -43,6 +43,8 @@ class CreateVehicleUsageRecordsTable extends Migration
                   ->references('id')
                   ->on('custodians')->onDelete('cascade');
 
+             $table->integer('department_id')->unsigned();
+
             $table->timestamps();
         });
     }

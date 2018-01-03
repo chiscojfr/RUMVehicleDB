@@ -38,6 +38,7 @@ class VehicleUsageRecordService {
 			$entry->vehicle_id = Request::input('vehicle_id');
 			$entry->card_id = Request::input('card_id');
 			$entry->custodian_id = Request::input('custodian_id');
+			$entry->department_id = Request::input('department_id');
 			$entry->comments = Request::input('comments');
 
 			$entry->mime = $file->getClientMimeType();

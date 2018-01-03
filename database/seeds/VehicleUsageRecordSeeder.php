@@ -23,6 +23,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_id' => '1',
             'card_id' => '1',
             'custodian_id' => '1',
+            'department_id' => '1'
         ]);
 
         DB::table('vehicle_usage_records')->insert([
@@ -37,6 +38,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_id' => '2',
             'card_id' => '2',
             'custodian_id' => '2',
+            'department_id' => '2',
         ]);
 
         DB::table('vehicle_usage_records')->insert([
@@ -51,6 +53,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_id' => '2',
             'card_id' => '2',
             'custodian_id' => '2',
+            'department_id' => '1',
         ]);
 
         //For testting purposes
@@ -66,6 +69,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_id' => '2',
             'card_id' => '2',
             'custodian_id' => '5',
+            'department_id' => '3',
         ]);
 
         DB::table('vehicle_usage_records')->insert([
@@ -80,6 +84,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_id' => '2',
             'card_id' => '2',
             'custodian_id' => '2',
+            'department_id' => '4',
         ]);
         //End testing
     }

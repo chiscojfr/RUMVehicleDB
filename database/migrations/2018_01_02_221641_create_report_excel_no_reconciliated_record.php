@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExcelNoReconciliateRecordsTable extends Migration
+class CreateReportExcelNoReconciliatedRecord extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,10 @@ class CreateExcelNoReconciliateRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('excel_no_reconciliate_records', function (Blueprint $table) {
+        Schema::create('report_excel_no_reconciliate_records', function (Blueprint $table) {
             $table->increments('id');
             $table->string('cliente')->nullable();
+            $table->string('id_de_transaccion')->nullable();
             $table->string('fecha_de_la_transaccion')->nullable();
             $table->string('ubicacion_de_compra')->nullable();
             $table->string('numero_de_transaccion')->nullable();
@@ -34,6 +35,6 @@ class CreateExcelNoReconciliateRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('excel_no_reconciliate_records');
+        Schema::drop('report_excel_no_reconciliate_records');
     }
 }

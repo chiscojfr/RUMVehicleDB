@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\v1;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use JWTAuth;
@@ -17,6 +16,10 @@ use App\NotificationType;
 use App\RecordCorrectionStatus;
 use App\Services\v1\CardsService;
 use Carbon\Carbon;
+use App\ReportVehicleReconciledRecord;
+use App\ReportVehicleNoReconciledRecord;
+use App\ReportExcelNoReconciliateRecord;
+use Excel;
 
 class DashboardController extends Controller
 {
@@ -71,7 +74,7 @@ class DashboardController extends Controller
 
         $today = Carbon::today();
         $first_day_of_this_month = new Carbon('first day of this month');
-        $monthly_expenses = VehicleUsageRecord::whereBetween('date', [$first_day_of_this_month->subDay(), $today->addDay()])->get()->toArray();
+        $monthly_expenses = VehicleUsageRecord::whereBetween('date', [$first_day_of_this_month->startOfDay(), $today->endOfDay()])->get()->toArray();
         $total_monthly_expenses = 0;
         foreach ($monthly_expenses as $expense) {
             $total_monthly_expenses +=  $expense['total_receipt'];
@@ -104,7 +107,7 @@ class DashboardController extends Controller
         $cards = Card::where('custodian_id', '=', $user->id )->get();
         $today = Carbon::today();
         $first_day_of_this_month = new Carbon('first day of this month');
-        $monthly_expenses = VehicleUsageRecord::where('custodian_id','=', $user->id)->whereBetween('date', [$first_day_of_this_month->subDay(), $today->addDay()])->get()->toArray();
+        $monthly_expenses = VehicleUsageRecord::where('custodian_id','=', $user->id)->whereBetween('date', [$first_day_of_this_month->startOfDay(), $today->endOfDay()])->get()->toArray();
         $total_monthly_expenses = 0;
         foreach ($monthly_expenses as $expense) {
             $total_monthly_expenses +=  $expense['total_receipt'];
@@ -275,6 +278,61 @@ class DashboardController extends Controller
             }
             
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generate Monthly Report
+    |--------------------------------------------------------------------------
+    |
+    | Param: $request (month)
+    | Reutrn: Generated .xls report
+    |
+    */
+    public function generateMonthlyReport(Request $request){
+
+        // $user = $this->cards->getAuthenticatedUser();
+
+        // if($user->user_type_name == 'admin'){
+
+            $date_from = new Carbon($request['month']);
+            $date_to = new Carbon($request['month']);
+            $date_from = $date_from->startOfMonth()->startOfDay();
+            $date_to = $date_to->endOfMonth()->endOfDay();
+
+            $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+            $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+            $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+            $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get(); 
+
+            $data = ['reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records,'justified_no_reconcile_server_records' => $justified_no_reconcile_server_records,'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
+
+            Excel::create('Filename', function($excel) use($data) {
+
+                $excel->sheet('Sheetname', function($sheet) use($data) {
+
+                    $date_from = new Carbon($request['month']);
+                    $date_to = new Carbon($request['month']);
+                    $date_from = $date_from->startOfMonth()->startOfDay();
+                    $date_to = $date_to->endOfMonth()->endOfDay();
+
+                    $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+                    $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+                    $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
+                    $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get(); 
+                    $sheet->fromArray($data);
+
+                });
+
+            })->download('xls');
+
+            //return response()->json(['data' => $data], 200);
+        // }
+        // else{
+        //     return response()->json(['message' => 'Error: Only Admin can generate reports.'], 401);
+        // }
+       
+
     }
 
 
