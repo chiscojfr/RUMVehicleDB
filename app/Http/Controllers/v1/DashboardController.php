@@ -321,9 +321,9 @@ class DashboardController extends Controller
 
             //dd($data);
 
-            Excel::create('Report', function($excel) use($data) {
+            Excel::create('Conciliation Report from '.$record_stats_details[0]['formatted_conciliation_dates'], function($excel) use($data) {
 
-                $excel->sheet('Sheetname', function($sheet) use($data) {
+                $excel->sheet('Sheet', function($sheet) use($data) {
 
                     $sheet->fromArray($data['record_stats_details']);
                     $sheet->fromArray($data['reconcile_records']);

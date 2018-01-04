@@ -513,7 +513,7 @@ class VehicleUsageRecordController extends Controller
         //Save conciliation stats details
         $today = Carbon::today();
         $this_month = $today->year.'-'.$today->month;
-        $conciliation_dates = $date_from->toDateString().' / '.$date_to->toDateString();
+        $conciliation_dates = $date_from->toDateString().'/'.$date_to->toDateString();
         $formatted_conciliation_dates = $date_from->formatLocalized('%B %d, %Y').' to '.$date_to->formatLocalized('%B %d, %Y'); 
         if( ReportStatsDetails::where('conciliation_dates', '=', $conciliation_dates )->count() == 0  ){
             $stats_details = new ReportStatsDetails();
