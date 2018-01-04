@@ -221,10 +221,10 @@ class DashboardController extends Controller
         if($user->user_type_name == 'admin'){
             
             $notifications = Notification::where('was_justified', '=', 1)->get()->toArray();
-            $justified_notifiactions_count = Notification::where('status_type_id', '!=', 3)->count();
+            $justified_notifications_count = Notification::where('status_type_id', '!=', 3)->count();
 
             $data = [];
-            $data['justified_notifiactions_count'] = $justified_notifiactions_count;
+            $data['justified_notifications_count'] = $justified_notifications_count;
             foreach ($notifications as $notification) {
                 $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
