@@ -31,6 +31,7 @@ use App\ExcelNoReconciliateRecord;
 use App\ReportVehicleReconciledRecord;
 use App\ReportVehicleNoReconciledRecord;
 use App\ReportExcelNoReconciliateRecord;
+use App\ReportStatsDetails;
 
 class VehicleUsageRecordController extends Controller
 {
@@ -508,6 +509,25 @@ class VehicleUsageRecordController extends Controller
             }
             
         }
+
+        //Save conciliation stats details
+        $today = Carbon::today();
+        $this_month = $today->year.'-'.$today->month;
+        $conciliation_dates = $date_from->toDateString().' / '.$date_to->toDateString();
+        $formatted_conciliation_dates = $date_from->formatLocalized('%B %d, %Y').' to '.$date_to->formatLocalized('%B %d, %Y'); 
+        if( ReportStatsDetails::where('conciliation_dates', '=', $conciliation_dates )->count() == 0  ){
+            $stats_details = new ReportStatsDetails();
+            $stats_details->conciliation_dates = $conciliation_dates;
+            $stats_details->formatted_conciliation_dates = $formatted_conciliation_dates;
+            $stats_details->conciliation_percent = $conciliation_percent;
+            $stats_details->total_excel_records = $total_excel_records;
+            $stats_details->total_server_records = $total_server_records;
+            $stats_details->total_expenses_in_excel_records = $total_server_records;
+            $stats_details->total_expenses_in_server_records = $total_expenses_in_excel_records;
+            $stats_details->after_conciliation_percent = 0;
+            $stats_details->save();
+        }
+
 
         //Reconciliation Output
         $data=['conciliation_percent' => $conciliation_percent, 'total_excel_records' => $total_excel_records,'total_server_records' => $total_server_records, 'total_expenses_in_excel_records' => $total_expenses_in_excel_records,'total_expenses_in_server_records' => $total_expenses_in_server_records ,'reconciled_server_records' => $reconcile_records, 'no_reconciled_server_records' =>$no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records];

@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use App\ReportVehicleReconciledRecord;
 use App\ReportVehicleNoReconciledRecord;
 use App\ReportExcelNoReconciliateRecord;
+use App\ReportStatsDetails;
 use Excel;
 
 class DashboardController extends Controller
@@ -294,7 +295,7 @@ class DashboardController extends Controller
         // $user = $this->cards->getAuthenticatedUser();
 
         // if($user->user_type_name == 'admin'){
-
+            //dd($request['month']);
             $date_from = new Carbon($request['month']);
             $date_to = new Carbon($request['month']);
             $date_from = $date_from->startOfMonth()->startOfDay();
@@ -303,24 +304,24 @@ class DashboardController extends Controller
             $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
             $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
             $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-            $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get(); 
+            $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get();
+            $record_stats_details = ReportStatsDetails::where('conciliation_month', '=', $request['month'] )->get(); 
 
-            $data = ['reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records,'justified_no_reconcile_server_records' => $justified_no_reconcile_server_records,'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
+            $data = [ 'record_stats_details' => $record_stats_details,'reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records,'justified_no_reconcile_server_records' => $justified_no_reconcile_server_records,'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
 
-            Excel::create('Filename', function($excel) use($data) {
+            //dd($data);
+
+            Excel::create('Report', function($excel) use($data) {
 
                 $excel->sheet('Sheetname', function($sheet) use($data) {
 
-                    $date_from = new Carbon($request['month']);
-                    $date_to = new Carbon($request['month']);
-                    $date_from = $date_from->startOfMonth()->startOfDay();
-                    $date_to = $date_to->endOfMonth()->endOfDay();
+                    $sheet->fromArray($data['record_stats_details']);
+                    $sheet->fromArray($data['reconcile_records']);
+                    $sheet->fromArray($data['no_reconcile_server_records']);
+                    $sheet->fromArray($data['excel_no_reconciliated_records']);
+                    $sheet->fromArray($data['justified_no_reconcile_server_records']);
 
-                    $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-                    $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-                    $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-                    $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get(); 
-                    $sheet->fromArray($data);
+                    $sheet->setAllBorders('thin');
 
                 });
 
@@ -332,6 +333,25 @@ class DashboardController extends Controller
         //     return response()->json(['message' => 'Error: Only Admin can generate reports.'], 401);
         // }
        
+
+    }
+
+    public function reportDates(){
+
+        $details = ReportStatsDetails::all();
+
+        $data = [];
+        foreach ($details as $detail) {
+
+            $entry =[
+                    'value' => $detail['conciliation_dates'],
+                    'formatted_conciliation_dates' => $detail['formatted_conciliation_dates'],
+                    ];
+
+            $data[] = $entry;
+        }
+        return response()->json(['data' => $data], 200);
+
 
     }
 
