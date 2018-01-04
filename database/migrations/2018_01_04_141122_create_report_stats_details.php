@@ -16,6 +16,8 @@ class CreateReportStatsDetails extends Migration
             $table->increments('id');
             $table->string('conciliation_dates')->nullable();
             $table->string('formatted_conciliation_dates')->nullable();
+            $table->string('conciliation_date_from')->nullable();
+            $table->string('conciliation_date_to')->nullable();
             $table->string('conciliation_percent')->nullable();
             $table->string('total_excel_records')->nullable();
             $table->string('total_server_records')->nullable();

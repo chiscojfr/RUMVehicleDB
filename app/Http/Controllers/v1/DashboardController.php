@@ -62,7 +62,7 @@ class DashboardController extends Controller
     |
     | Param: n/a
     | Reutrn: System stats about, total users, active cards, 
-    |         registered vehicles and total monthly expenses.
+    |         registered vehicles, total monthly expenses, and latest_conciliation_date.
     |
     */
     private function adminStats(){   
@@ -77,15 +77,23 @@ class DashboardController extends Controller
         $first_day_of_this_month = new Carbon('first day of this month');
         $monthly_expenses = VehicleUsageRecord::whereBetween('date', [$first_day_of_this_month->startOfDay(), $today->endOfDay()])->get()->toArray();
         $total_monthly_expenses = 0;
+
         foreach ($monthly_expenses as $expense) {
             $total_monthly_expenses +=  $expense['total_receipt'];
+        }
+
+        $latest_conciliation_date = null;
+        if(ReportStatsDetails::all()->count()){
+            $latest_conciliation_date = ReportStatsDetails::latest('created_at')->get();
+            $latest_conciliation_date = $latest_conciliation_date[0]['created_at']->toDateString();
         }
 
         $stats = [
             'registered_users' => $custodians_count,
             'active_credit_cards' => $cards_count,
             'registered_vehicles' => $vehicles_count,
-            'total_monthly_expenses' => $total_monthly_expenses
+            'total_monthly_expenses' => $total_monthly_expenses,
+            'latest_conciliation_date' => $latest_conciliation_date
         ];
 
         return response()->json(['stats' => $stats], 200);
@@ -165,9 +173,11 @@ class DashboardController extends Controller
         if( Notification::where('custodian_id', '=', $user->id)->count() > 0 ){
 
             $notifications = Notification::where('custodian_id', '=', $user->id);
-            $notifications = Notification::where('was_archived', '=', 0)->get()->toArray();
-
+            $notifications = Notification::where('was_archived', '=', 0);
+            $unread_notifications_count = $notifications->where('was_read','=','0')->count();
+            $notifications = $notifications->get()->toArray();
             $data = [];
+            $data['unread_notifications_count'] = $unread_notifications_count;
             foreach ($notifications as $notification) {
                 $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
@@ -296,16 +306,14 @@ class DashboardController extends Controller
 
         // if($user->user_type_name == 'admin'){
             //dd($request['month']);
-            $date_from = new Carbon($request['month']);
-            $date_to = new Carbon($request['month']);
-            $date_from = $date_from->startOfMonth()->startOfDay();
-            $date_to = $date_to->endOfMonth()->endOfDay();
+            $record_stats_details = ReportStatsDetails::where('conciliation_dates', '=', $request['dates'] )->get();
+            $date_from = $record_stats_details[0]['conciliation_date_from']; 
+            $date_to = $record_stats_details[0]['conciliation_date_to'];
 
             $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
             $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
             $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
             $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get();
-            $record_stats_details = ReportStatsDetails::where('conciliation_month', '=', $request['month'] )->get(); 
 
             $data = [ 'record_stats_details' => $record_stats_details,'reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records,'justified_no_reconcile_server_records' => $justified_no_reconcile_server_records,'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
 
@@ -336,6 +344,15 @@ class DashboardController extends Controller
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Report Dates
+    |--------------------------------------------------------------------------
+    |
+    | Param: n/a
+    | Reutrn: Conciliation Dates
+    |
+    */
     public function reportDates(){
 
         $details = ReportStatsDetails::all();

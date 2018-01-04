@@ -519,6 +519,8 @@ class VehicleUsageRecordController extends Controller
             $stats_details = new ReportStatsDetails();
             $stats_details->conciliation_dates = $conciliation_dates;
             $stats_details->formatted_conciliation_dates = $formatted_conciliation_dates;
+            $stats_details->conciliation_date_from = $date_from;
+            $stats_details->conciliation_date_to = $date_to;
             $stats_details->conciliation_percent = $conciliation_percent;
             $stats_details->total_excel_records = $total_excel_records;
             $stats_details->total_server_records = $total_server_records;
