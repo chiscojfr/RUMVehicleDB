@@ -524,8 +524,8 @@ class VehicleUsageRecordController extends Controller
             $stats_details->conciliation_percent = $conciliation_percent;
             $stats_details->total_excel_records = $total_excel_records;
             $stats_details->total_server_records = $total_server_records;
-            $stats_details->total_expenses_in_excel_records = $total_server_records;
-            $stats_details->total_expenses_in_server_records = $total_expenses_in_excel_records;
+            $stats_details->total_expenses_in_excel_records = $total_expenses_in_excel_records;
+            $stats_details->total_expenses_in_server_records = $total_expenses_in_server_records;
             $stats_details->after_conciliation_percent = 0;
             $stats_details->save();
         }

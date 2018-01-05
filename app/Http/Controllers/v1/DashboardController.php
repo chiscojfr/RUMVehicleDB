@@ -325,7 +325,17 @@ class DashboardController extends Controller
 
                 $excel->sheet('Sheet', function($sheet) use($data) {
 
-                    $sheet->fromArray($data['record_stats_details']);
+                    $sheet->mergeCells('A1:Q1');
+                    $sheet->mergeCells('A2:Q2');
+                    $sheet->mergeCells('A3:Q3');
+                    $sheet->mergeCells('A4:Q4');
+                    $sheet->row(1, ['UNIVERSIDAD DE PUERTO RICO RECINTO DE MAYAÜEZ']);
+                    $sheet->row(2, ['DECANATO DE ADMINISTRACIÓN']);
+                    $sheet->row(3, ['Conciliation Report from '.$data['record_stats_details'][0]['formatted_conciliation_dates']]);
+                    $sheet->row(4, ['Conciliation Percent: '.$data['record_stats_details'][0]['conciliation_percent'].'%' ]);
+                    $sheet->row(5, ['System Transactions: '.$data['record_stats_details'][0]['total_server_records'], ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_server_records'] ]);
+                    $sheet->row(6, ['Total Petrolleum Transactions: '.$data['record_stats_details'][0]['total_excel_records'], ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_excel_records'] ]);
+                    // $sheet->fromArray($data['record_stats_details']);
                     $sheet->fromArray($data['reconcile_records']);
                     $sheet->fromArray($data['no_reconcile_server_records']);
                     $sheet->fromArray($data['excel_no_reconciliated_records']);
