@@ -43,7 +43,6 @@ class VehiclesService {
 
 			$columns = [
 				'type_id',
-				'custodian_id',
 				'department_id',
 			];
 

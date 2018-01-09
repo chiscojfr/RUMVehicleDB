@@ -39,7 +39,7 @@ class CardController extends Controller
         }
         else {
 
-             $data = $this->cards->getUserCards($user->id);
+             $data = $this->cards->getUserCards($request, $user->id);
              if(empty($data)){
              	return response()->json(['message' => 'Error: This custodian has not have cards.'], 404);
              }
@@ -89,11 +89,11 @@ class CardController extends Controller
         if($data == null ){
             return response()->json(['message' => 'Error: Card not found!'],404);
         }
-        else if($user->user_type_name == 'admin'){
+        else if($user->user_type_name == 'admin' || $user->user_type_name == 'custodian'){
             return response()->json(['data' => $data], 200);
         }
         else{
-            return response()->json(['message' => 'Error: Only Admin can view this info.'], 500);
+            return response()->json(['message' => 'Error: Only Admin or Custodian can view this info.'], 500);
         }
     }
 

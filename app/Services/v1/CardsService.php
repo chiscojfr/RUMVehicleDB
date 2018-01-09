@@ -114,10 +114,30 @@ class CardsService {
 		}
 	}
 
-	public function getUserCards($id){
+	public function getUserCards($request, $id){
 
-		$card = Card::where('custodian_id', $id)->paginate(10);
-		return $this->filterCards($card);
+		if( count( $request->all() ) == 0){
+			return $this->filterCards(Card::where('custodian_id', $id)->paginate(10));
+		}
+		else{
+				$cards = Card::where('custodian_id', $id);
+				$queries = [];
+
+				$columns = [
+					'type',
+					'status'
+				];
+
+				foreach ($columns as $column) {
+					if(request()->has($column)){
+						
+						$cards = $cards->where($column, request($column));
+						$queries[$column] = request($column);
+					}
+				}
+				
+				return $this->filterCards($cards->paginate(10));
+			}
 		
 	}
 
