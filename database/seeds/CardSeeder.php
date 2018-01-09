@@ -12,41 +12,41 @@ class CardSeeder extends Seeder
     public function run()
     {
         DB::table('cards')->insert([
-            'name' => 'test-1',
-            'number' => '4444-4444-3333-2222',
+            'name' => 'test-card-1',
+            'number' => '12341234123412341',
             'type' => 'Regular',
             'expiry' => '2018-01-01',
             'status' => 'Active',
             'cardID' => '1234',
-            'custodian_id' => '1',
-            'department_id' => '4'
+            'custodian_id' => '5',
+            'department_id' => '5'
         ]);
 
         DB::table('cards')->insert([
-            'name' => 'test-2',
-            'number' => '1111-4444-3333-2222',
+            'name' => 'test-card-2',
+            'number' => '34341234123412332',
             'type' => 'Premium',
             'expiry' => '2018-01-01',
             'status' => 'Active',
             'cardID' => '4321',
-            'custodian_id' => '1',
-            'department_id' => '4'
+            'custodian_id' => '5',
+            'department_id' => '5'
         ]);
 
         DB::table('cards')->insert([
-            'name' => 'test-3',
-            'number' => '8888-4444-3333-2222',
+            'name' => 'test-card-3',
+            'number' => '34341234123412337',
             'type' => 'Diesel',
             'expiry' => '2018-01-01',
             'status' => 'Active',
             'cardID' => '5467',
-            'custodian_id' => '3',
-            'department_id' => '4'
+            'custodian_id' => '6',
+            'department_id' => '6'
         ]);
 
         DB::table('cards')->insert([
-            'name' => 'test-4',
-            'number' => '9999-4444-3333-2222',
+            'name' => 'test-card-4',
+            'number' => '44341234123412332',
             'type' => 'Spare',
             'expiry' => '2018-01-01',
             'status' => 'Inactive',

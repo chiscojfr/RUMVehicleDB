@@ -21,6 +21,7 @@ use App\ReportVehicleNoReconciledRecord;
 use App\ReportExcelNoReconciliateRecord;
 use App\ReportStatsDetails;
 use Excel;
+use Faker\Factory as Faker;
 
 class DashboardController extends Controller
 {
@@ -173,11 +174,10 @@ class DashboardController extends Controller
         if( Notification::where('custodian_id', '=', $user->id)->count() > 0 ){
 
             $notifications = Notification::where('custodian_id', '=', $user->id);
-            $notifications = Notification::where('was_archived', '=', 0);
+            ///$notifications = Notification::where('was_archived', '=', 0);
             $unread_notifications_count = $notifications->where('was_read','=','0')->count();
             $notifications = $notifications->get()->toArray();
             $data = [];
-            $data['unread_notifications_count'] = $unread_notifications_count;
             foreach ($notifications as $notification) {
                 $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
@@ -197,7 +197,7 @@ class DashboardController extends Controller
                 $data[] = $entry;
             }
           
-            return response()->json(['notifications' => $data], 200);
+            return response()->json(['notifications' => $data, 'unread_notifications_count' => $unread_notifications_count], 200);
         }
         else{
             return response()->json(['notifications' => 0], 200);
@@ -221,10 +221,9 @@ class DashboardController extends Controller
         if($user->user_type_name == 'admin'){
             
             $notifications = Notification::where('was_justified', '=', 1)->get()->toArray();
-            $justified_notifications_count = Notification::where('status_type_id', '!=', 3)->count();
+            $justified_notifications_count = Notification::where('was_justified', '=', 1)->count();
 
             $data = [];
-            $data['justified_notifications_count'] = $justified_notifications_count;
             foreach ($notifications as $notification) {
                 $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
@@ -242,7 +241,7 @@ class DashboardController extends Controller
                 $data[] = $entry;
             }
           
-            return response()->json(['notifications' => $data], 200);
+            return response()->json(['notifications' => $data, 'justified_notifications_count' => $justified_notifications_count], 200);
         }
         else{
             return response()->json(['message' => 'Error: Only Admin can view their notifications.'], 401);
@@ -366,6 +365,23 @@ class DashboardController extends Controller
     |
     */
     public function reportDates(){
+
+        // $faker = Faker::create();
+        // dd($faker->addresss);
+     // $values = [];   
+     // $values = array(
+     //      array('a'=>0, 'x'=>1, 'y'=>2, 'z'=>3),
+     //      array('foo'=>"bar", 'x'=>4, 'y'=>5),
+     //      array('x'=>-1, 'y'=>-2, 'z'=>"baz"),
+     //      array('x'=>-1, 'y'=>-2, 'z'=> array('m'=>123)),
+     //    );
+     // foreach ($values as $value ) {
+     //    dd( $this->has( $value['a'] ) );
+     //    if($t['a'] =! null ){
+
+     //    }
+     // }
+        
 
         $details = ReportStatsDetails::all();
 
