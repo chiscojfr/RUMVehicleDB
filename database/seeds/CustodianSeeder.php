@@ -100,7 +100,7 @@ class CustodianSeeder extends Seeder
                 'contact_number' => '00000',
                 'employee_id' => '802000000',
                 'user_type_id' => '3',
-                'department_id' => '2'
+                'department_id' => $faker->numberBetween($min = 1, $max = 95)
             ]);
         }
 

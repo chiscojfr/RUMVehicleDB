@@ -68,7 +68,7 @@ class CardSeeder extends Seeder
                 'status' => 'Active',
                 'cardID' => '432156',
                 'custodian_id' => $faker->numberBetween($min = 4, $max = 6),
-                'department_id' => '4'
+                'department_id' => $faker->numberBetween($min = 1, $max = 95)
             ]);
         }
 

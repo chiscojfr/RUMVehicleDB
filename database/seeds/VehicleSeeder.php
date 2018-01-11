@@ -90,7 +90,7 @@ class VehicleSeeder extends Seeder
                 'inscription_date' => '2017-01-01',
                 'license_plate' => 'HQP-313',
                 'custodian_id' => '7',
-                'department_id' => '4',
+                'department_id' => $faker->numberBetween($min = 1, $max = 95),
 
             ]);
         }
