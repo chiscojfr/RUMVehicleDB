@@ -13,14 +13,14 @@ class CardSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create(); 
-        
+
         DB::table('cards')->insert([
             'name' => 'test-card-1',
             'number' => '12341234123412341',
             'type' => 'Regular',
             'expiry' => '2018-01-01',
             'status' => 'Active',
-            'cardID' => '1234',
+            'cardID' => '123456',
             'custodian_id' => '5',
             'department_id' => '5'
         ]);
@@ -31,7 +31,7 @@ class CardSeeder extends Seeder
             'type' => 'Premium',
             'expiry' => '2018-01-01',
             'status' => 'Active',
-            'cardID' => '4321',
+            'cardID' => '432156',
             'custodian_id' => '5',
             'department_id' => '5'
         ]);
@@ -42,7 +42,7 @@ class CardSeeder extends Seeder
             'type' => 'Diesel',
             'expiry' => '2018-01-01',
             'status' => 'Active',
-            'cardID' => '5467',
+            'cardID' => '546756',
             'custodian_id' => '6',
             'department_id' => '6'
         ]);
@@ -53,7 +53,7 @@ class CardSeeder extends Seeder
             'type' => 'Spare',
             'expiry' => '2018-01-01',
             'status' => 'Inactive',
-            'cardID' => '4321',
+            'cardID' => '432156',
             'custodian_id' => '4',
             'department_id' => '4'
         ]);
@@ -66,7 +66,7 @@ class CardSeeder extends Seeder
                 'type' => 'Spare',
                 'expiry' => '2018-01-01',
                 'status' => 'Active',
-                'cardID' => '4321',
+                'cardID' => '432156',
                 'custodian_id' => $faker->numberBetween($min = 4, $max = 6),
                 'department_id' => '4'
             ]);
