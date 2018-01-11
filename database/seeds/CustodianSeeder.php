@@ -99,7 +99,7 @@ class CustodianSeeder extends Seeder
                 'position' => 'Test User',
                 'contact_number' => '00000',
                 'employee_id' => '802000000',
-                'user_type_id' => '2',
+                'user_type_id' => '3',
                 'department_id' => '2'
             ]);
         }
