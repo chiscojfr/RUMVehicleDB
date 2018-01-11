@@ -471,7 +471,7 @@ class DashboardController extends Controller
     public function reportDates(){
 
         // $faker = Faker::create();
-        // dd($faker->addresss);
+        // dd($faker->password);
      // $values = [];   
      // $values = array(
      //      array('a'=>0, 'x'=>1, 'y'=>2, 'z'=>3),

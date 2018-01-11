@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class CustodianSeeder extends Seeder
 {
@@ -11,6 +12,7 @@ class CustodianSeeder extends Seeder
      */
     public function run()
     {   
+        $faker = Faker::create(); 
         //1
         DB::table('custodians')->insert([
             'name' => 'Admin',
@@ -88,5 +90,19 @@ class CustodianSeeder extends Seeder
             'user_type_id' => '2',
             'department_id' => '2'
         ]);
+
+        for ($i=0; $i < 10; $i++) { 
+            DB::table('custodians')->insert([
+                'name' => 'Test-Custodian-Faker',
+                'email' => $faker->email,
+                'password' => bcrypt($faker->password),
+                'position' => 'Test User',
+                'contact_number' => '00000',
+                'employee_id' => '802000000',
+                'user_type_id' => '2',
+                'department_id' => '2'
+            ]);
+        }
+
     }
 }

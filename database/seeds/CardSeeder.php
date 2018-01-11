@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class CardSeeder extends Seeder
 {
@@ -11,6 +12,8 @@ class CardSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker::create(); 
+        
         DB::table('cards')->insert([
             'name' => 'test-card-1',
             'number' => '12341234123412341',
@@ -54,6 +57,20 @@ class CardSeeder extends Seeder
             'custodian_id' => '4',
             'department_id' => '4'
         ]);
+
+        for ($i=0; $i < 10; $i++) { 
+
+            DB::table('cards')->insert([
+                'name' => 'test-card-faker',
+                'number' => '44341234123412332',
+                'type' => 'Spare',
+                'expiry' => '2018-01-01',
+                'status' => 'Active',
+                'cardID' => '4321',
+                'custodian_id' => $faker->numberBetween($min = 4, $max = 6),
+                'department_id' => '4'
+            ]);
+        }
 
     }
 }
