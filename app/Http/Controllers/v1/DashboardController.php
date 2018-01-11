@@ -179,7 +179,7 @@ class DashboardController extends Controller
             $notifications = $notifications->get()->toArray();
             $data = [];
             foreach ($notifications as $notification) {
-                $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
+                $record = $this->cards->getRecordInfo($notification['record_id']);
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
                 $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
 
@@ -303,55 +303,159 @@ class DashboardController extends Controller
     */
     public function generateMonthlyReport(Request $request){
 
-        // $user = $this->cards->getAuthenticatedUser();
-
-        // if($user->user_type_name == 'admin'){
-            //dd($request['month']);
             $record_stats_details = ReportStatsDetails::where('conciliation_dates', '=', $request['dates'] )->get();
-            $date_from = $record_stats_details[0]['conciliation_date_from']; 
+            $date_from = new Carbon($record_stats_details[0]['conciliation_date_from']); 
+            $date_from = $date_from->startOfDay()->subMinute();
             $date_to = $record_stats_details[0]['conciliation_date_to'];
 
-            $reconcile_records = ReportVehicleReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-            $no_reconcile_server_records = ReportVehicleNoReconciledRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-            $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('created_at', [$date_from, $date_to])->get(); 
-            $justified_no_reconcile_server_records = Notification::whereBetween('created_at', [$date_from, $date_to])->get();
+            $VehicleReconciledRecords = ReportVehicleReconciledRecord::whereBetween('record_date', [$date_from, $date_to])->get(); 
+            $excel_no_reconciliated_records = ReportExcelNoReconciliateRecord::whereBetween('fecha_de_la_transaccion', [$date_from, $date_to])->get(); 
+            $justified_no_reconcile_server_records = Notification::whereBetween('record_date', [$date_from, $date_to])->get();
+            
+            $reconcile_records =  array();
+            $no_reconcile_server_records = array();
 
-            $data = [ 'record_stats_details' => $record_stats_details,'reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records,'justified_no_reconcile_server_records' => $justified_no_reconcile_server_records,'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
+            foreach ($VehicleReconciledRecords as $record){
+               $temp_record = VehicleUsageRecord::where('id', '=', $record['vehicle_usage_record_id'])->get()->toArray();
+                if($temp_record != null){  
+                    $temp_record = $this->cards->getRecordInfo($record['vehicle_usage_record_id']);
+                    array_push($reconcile_records, $temp_record);
+                }
+            }
 
-            //dd($data);
+            foreach ($justified_no_reconcile_server_records as $record){
+
+               $temp_record = VehicleUsageRecord::where('id', '=', $record['record_id'])->get()->toArray();
+
+               if($temp_record != null){
+
+                    $temp_record = $this->cards->getRecordInfo($record['record_id']);
+                    $temp_record['system_warning'] = NotificationType::find($record['notification_type_id'])->notification_type_name;
+                    $temp_record['custodian_justification'] = $record['justification'];
+                    $temp_record['justification_status'] = RecordCorrectionStatus::find($record['status_type_id'])->status_type_name;
+                    array_push($no_reconcile_server_records, $temp_record);    
+               }
+
+            }
+
+            $data = [ 'record_stats_details' => $record_stats_details,'reconcile_records' => $reconcile_records, 'no_reconcile_server_records' => $no_reconcile_server_records, 'excel_no_reconciliated_records' => $excel_no_reconciliated_records ];
 
             Excel::create('Conciliation Report from '.$record_stats_details[0]['formatted_conciliation_dates'], function($excel) use($data) {
 
                 $excel->sheet('Sheet', function($sheet) use($data) {
 
-                    $sheet->mergeCells('A1:Q1');
-                    $sheet->mergeCells('A2:Q2');
-                    $sheet->mergeCells('A3:Q3');
-                    $sheet->mergeCells('A4:Q4');
-                    $sheet->row(1, ['UNIVERSIDAD DE PUERTO RICO RECINTO DE MAYAÜEZ']);
-                    $sheet->row(2, ['DECANATO DE ADMINISTRACIÓN']);
-                    $sheet->row(3, ['Conciliation Report from '.$data['record_stats_details'][0]['formatted_conciliation_dates']]);
-                    $sheet->row(4, ['Conciliation Percent: '.$data['record_stats_details'][0]['conciliation_percent'].'%' ]);
-                    $sheet->row(5, ['System Transactions: '.$data['record_stats_details'][0]['total_server_records'], ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_server_records'] ]);
-                    $sheet->row(6, ['Total Petrolleum Transactions: '.$data['record_stats_details'][0]['total_excel_records'], ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_excel_records'] ]);
-                    // $sheet->fromArray($data['record_stats_details']);
-                    $sheet->fromArray($data['reconcile_records']);
-                    $sheet->fromArray($data['no_reconcile_server_records']);
-                    $sheet->fromArray($data['excel_no_reconciliated_records']);
-                    $sheet->fromArray($data['justified_no_reconcile_server_records']);
+                    $sheet->setFontFamily('Arial Rounded MT Bold');
+                    $sheet->setFontSize(20);
+                    $sheet->setFontBold(true);
+                    $sheet->sethorizontalCentered(true);
 
+                    $sheet->mergeCells('A1:N1');
+                    $sheet->mergeCells('A2:N2');
+                    $sheet->setFontSize(18);
                     $sheet->setAllBorders('thin');
+                    $sheet->mergeCells('A3:N3');
+                    $sheet->mergeCells('A4:N4');
+                    $sheet->mergeCells('A5:N5');
+                    $sheet->mergeCells('A6:N6');
+                    $sheet->mergeCells('A7:N7');
+                    $sheet->mergeCells('A8:N8');
+                    $sheet->mergeCells('A9:N9');
+                    $sheet->row(1, ['UNIVERSIDAD DE PUERTO RICO RECINTO DE MAYAGÜEZ']);
+                    $sheet->row(2, ['DECANATO DE ADMINISTRACIÓN']);
+                    $sheet->row(1, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->row(2, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->row(3, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(4, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(5, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(6, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(7, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(8, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(9, function($row) { $row->setBackground('#fceb97'); });
+                    
+                    $sheet->row(3, ['']);
+                    $sheet->row(4, ['Conciliation Report from '.$data['record_stats_details'][0]['formatted_conciliation_dates']]);
+                    $sheet->row(5, ['Conciliation Percent: '.$data['record_stats_details'][0]['conciliation_percent'].'%' ]);
+                    $sheet->row(6, ['']);
+                    $sheet->row(7, ['System Transactions: '.$data['record_stats_details'][0]['total_server_records'].' | '.' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_server_records'] ]);
+                    $sheet->row(8, ['                                            VS.']);
+                    $sheet->row(9, ['Total Petroleum Transactions: '.$data['record_stats_details'][0]['total_excel_records'].' | '. ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_excel_records'] ]);
+
+                    $sheet->setFontSize(15);
+                    $sheet->appendRow(['']);
+                    $sheet->appendRow(['RECONCILE RECORDS']);
+                    $currentRow = sizeof($sheet->appendRow(['Date','Receipt Number', 'Purchase Type', 'Total Liters', 'Total Receipt', 'Vehicle Mileage', 'Comments', 'Department', 'Custodian', 'Card Name', 'Card Number'])->toArray());
+                    $sheet->row($currentRow, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->setFontSize(12);
+                    $sheet->setColumnFormat(array(
+                        'K' => '0'
+                    ));
+
+                    foreach ($data['reconcile_records'] as $record) {
+                        $row = [];
+                        $row[0] = $record['date'];
+                        $row[1] = $record['receipt_number'];
+                        $row[2] = $record['purchase_type'];
+                        $row[3] = $record['total_liters'];
+                        $row[4] = $record['total_receipt'];
+                        $row[5] = $record['vehicle_mileage'];
+                        $row[6] = $record['comments'];
+                        $row[7] = $record['record_department_name'];
+                        $row[8] = $record['record_custodian_name'];
+                        $row[9] = $record['record_card_name'];
+                        $row[10] = $record['record_card_number'];
+                        $sheet->appendRow($row);
+                    }
+
+                    $sheet->appendRow(['']);
+                    $sheet->appendRow(['']);
+                    $sheet->setFontSize(15);
+                    $sheet->appendRow(['NON RECONCILE RECORDS']);
+                    $currentRow = sizeof($sheet->appendRow(['Date','Receipt Number', 'Purchase Type', 'Total Liters', 'Total Receipt', 'Vehicle Mileage', 'Comments', 'Department', 'Custodian', 'Card Name', 'Card Number', 'System Warning', 'Custodian Justification', 'Justification Status'])->toArray());
+                    $sheet->row($currentRow, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->setFontSize(12);
+                    foreach ($data['no_reconcile_server_records'] as $record) {
+                        $row = [];
+                        $row[0] = $record['date'];
+                        $row[1] = $record['receipt_number'];
+                        $row[2] = $record['purchase_type'];
+                        $row[3] = $record['total_liters'];
+                        $row[4] = $record['total_receipt'];
+                        $row[5] = $record['vehicle_mileage'];
+                        $row[6] = $record['comments'];
+                        $row[7] = $record['record_department_name'];
+                        $row[8] = $record['record_custodian_name'];
+                        $row[9] = $record['record_card_name'];
+                        $row[10] = $record['record_card_number'];
+                        $row[11] = $record['system_warning'];
+                        $row[12] = $record['custodian_justification'];
+                        $row[13] = $record['justification_status'];
+                        $sheet->appendRow($row);
+                        
+                    }
+
+                    $sheet->appendRow(['']);
+                    $sheet->appendRow(['']);
+                    $sheet->setFontSize(15);
+                    $sheet->appendRow(['TOTAL PETROLEUM NON RECONCILE RECORDS']);
+                    $currentRow = sizeof($sheet->appendRow(['Date','Purchase Location','Receipt Number', 'Purchase Type', 'Total Liters', 'Total Receipt', 'Card Name','Customer Name'])->toArray());
+                    $sheet->row($currentRow, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->setFontSize(12);
+                    foreach ($data['excel_no_reconciliated_records'] as $record) {
+                        $row = [];
+                        $row[0] = $record['fecha_de_la_transaccion'];
+                        $row[1] = $record['ubicacion_de_compra'];
+                        $row[2] = $record['numero_de_transaccion'];
+                        $row[3] = $record['pieza'];
+                        $row[4] = $record['cantidad_litros'];
+                        $row[5] = $record['total_del_solicitante'];
+                        $row[6] = $record['nombre_de_la_tarjeta'];
+                        $row[7] = $record['cliente'];
+                        $sheet->appendRow($row);
+                    }
 
                 });
 
             })->download('xls');
-
-            //return response()->json(['data' => $data], 200);
-        // }
-        // else{
-        //     return response()->json(['message' => 'Error: Only Admin can generate reports.'], 401);
-        // }
-       
 
     }
 

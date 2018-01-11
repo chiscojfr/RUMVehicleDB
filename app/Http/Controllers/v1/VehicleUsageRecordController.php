@@ -346,6 +346,7 @@ class VehicleUsageRecordController extends Controller
                         if( ReportVehicleReconciledRecord::where('vehicle_usage_record_id', '=', $reconcile_record['id'])->count() == 0  ){
                             $entry = new ReportVehicleReconciledRecord();
                             $entry->vehicle_usage_record_id = $reconcile_record['id'];
+                            $entry->record_date = $reconcile_record['date'];
                             $entry->comments = 'Record Concilied!';
                             $entry->save();
                         }
@@ -355,6 +356,7 @@ class VehicleUsageRecordController extends Controller
                         if( ReportVehicleNoReconciledRecord::where('vehicle_usage_record_id', '=', $no_reconcile_record['id'])->count() == 0  ){
                             $entry = new ReportVehicleNoReconciledRecord();
                             $entry->vehicle_usage_record_id = $no_reconcile_record['id'];
+                            $entry->record_date = $no_reconcile_record['date'];
 
                             if($no_reconcile_record['date'] == $date_to->toDateString()){
 
@@ -491,6 +493,7 @@ class VehicleUsageRecordController extends Controller
                 $notification = new Notification();
                 $notification->custodian_id = $record['custodian_id'];
                 $notification->record_id = $record['id'];
+                $notification->record_date = $record['date'];
                 $notification->was_read = false;
                 $notification->was_justified = false;
                 $notification->was_archived = false;

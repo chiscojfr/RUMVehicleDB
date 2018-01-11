@@ -16,6 +16,7 @@ class CreateNotificationsTable extends Migration
             $table->increments('id');
             $table->integer('custodian_id')->unsigned();
             $table->integer('record_id')->unsigned()->nullable();
+            $table->date('record_date')->nullable();
             $table->integer('notification_type_id')->unsigned();
             $table->boolean('was_read');
             $table->string('justification')->nullable();

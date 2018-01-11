@@ -18,6 +18,8 @@ class CreateReportConciliatedRecords extends Migration
 
             $table->integer('vehicle_usage_record_id')->unsigned();
 
+            $table->date('record_date')->nullable();
+
             $table->string('comments')->nullable();
             
             $table->timestamps();

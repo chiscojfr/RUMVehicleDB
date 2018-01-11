@@ -34,6 +34,7 @@ class CreateVehiclesTable extends Migration
             $table->string('purchase_price')->nullable();
             $table->date('inscription_date')->nullable();
             $table->string('license_plate')->nullable();
+            $table->boolean('was_archived')->nullable();
 
             $table->integer('department_id')->unsigned();
             $table->integer('custodian_id')->unsigned();

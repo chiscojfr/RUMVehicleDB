@@ -6,6 +6,7 @@ use App\UserType;
 use App\Department;
 use App\Card;
 use App\Vehicle;
+use App\VehicleUsageRecord;
 use JWTAuth;
 
 class CardsService {
@@ -188,6 +189,51 @@ class CardsService {
 		}
 		$data = [$cards];
 		return $data;
+	}
+
+	public function getRecordInfo($id){
+
+		$record = VehicleUsageRecord::find($id);
+		if($record == null){
+			$data = $record;
+			if($data == null){
+				return $data;
+			}
+        }
+        else{
+
+	        $data = [];
+
+			$record_department_name = Department::find( Card::find($record->card_id)->department_id )->name;
+	        $record->record_department_name =  $record_department_name;
+
+	        $record_custodian_name = Custodian::find($record->custodian_id)->name;
+	        $record->record_custodian_name =  $record_custodian_name;
+
+	        $record_card = Card::find($record->card_id);
+	        $record->record_card_name =  $record_card->name;
+	        $record->record_card_number =  $record_card->number;
+
+	        $picture = route('getentry', $record->filename);
+	        $record->record_picture = $picture;
+
+			$data = [
+				'receipt_number' => $record->receipt_number,
+				'date' => $record->date,
+				'purchase_type' => $record->purchase_type,
+				'total_liters' => $record->total_liters,
+				'total_receipt' => $record->total_receipt,
+				'vehicle_mileage' => $record->vehicle_mileage,
+				'comments' => $record->comments,
+				'record_department_name' => $record->record_department_name,
+				'record_custodian_name' => $record->record_custodian_name,
+				'record_card_name' => $record->record_card_name,
+				'record_card_number' => $record->record_card_number,
+				'record_picture' => $record->record_picture
+			];
+
+			return $data;
+		}
 	}
 
 	public function getAuthenticatedUser(){

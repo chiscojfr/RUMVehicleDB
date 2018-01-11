@@ -44,6 +44,7 @@ class VehiclesService {
 			$columns = [
 				'type_id',
 				'department_id',
+				'was_archived',
 			];
 
 			foreach ($columns as $column) {
@@ -145,6 +146,9 @@ class VehiclesService {
 	        $vehicle_custodian_name = Custodian::find($vehicle->custodian_id)->name;
 	        $vehicle->vehicle_custodian_name =  $vehicle_custodian_name;
 
+	        $vehicle_type_name = VehicleType::find($vehicle->type_id)->vehicle_type_name;
+	        $vehicle->vehicle_type_name = $vehicle_type_name;
+
 			$entry = [
 				'id' => $vehicle->id,
 				'make' => $vehicle->make,
@@ -170,7 +174,8 @@ class VehiclesService {
 				'custodian_id' => $vehicle->custodian_id,
 	            'department_id' => $vehicle->department_id,
 	            'vehicle_custodian_name' => $vehicle->vehicle_custodian_name,
-	            'vehicle_department_name' => $vehicle->vehicle_department_name
+	            'vehicle_department_name' => $vehicle->vehicle_department_name,
+	            'vehicle_type_name' => $vehicle->vehicle_type_name,
 			];
 			$data[] = $entry;
 		}
