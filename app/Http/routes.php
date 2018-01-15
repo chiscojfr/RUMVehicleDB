@@ -17,6 +17,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> 'cors'], function(){
 	Route::get('records/get/{filename}', [
 	'as' => 'getentry', 'uses' => 'v1\VehicleUsageRecordController@get']);
 	Route::get('dashboard/report', 'v1\DashboardController@generateMonthlyReport');
+	Route::get('dashboard/report/vehicles', 'v1\DashboardController@vehiclesReport');
 });	
 
 Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], function(){
@@ -38,8 +39,6 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 	Route::get('dashboard/notifications', 'v1\DashboardController@getNotifications');
 
 	Route::put('dashboard/notifications/{id}', 'v1\DashboardController@notificationUpdate');
-
-
 
 	Route::get('dashboard/report/dates', 'v1\DashboardController@reportDates');
 

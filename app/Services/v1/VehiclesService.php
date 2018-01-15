@@ -123,6 +123,7 @@ class VehiclesService {
 	            'vehicle_custodian_name' => $vehicle->vehicle_custodian_name,
 	            'vehicle_department_name' => $vehicle->vehicle_department_name,
 	            'vehicle_type_name' => $vehicle->vehicle_type_name,
+	            'was_archived' => $vehicle->was_archived,
 			];
 
 			return $data;
@@ -191,6 +192,7 @@ class VehiclesService {
 	            'vehicle_custodian_name' => $vehicle->vehicle_custodian_name,
 	            'vehicle_department_name' => $vehicle->vehicle_department_name,
 	            'vehicle_type_name' => $vehicle->vehicle_type_name,
+	            'was_archived' => $vehicle->was_archived,
 			];
 			$data[] = $entry;
 		}

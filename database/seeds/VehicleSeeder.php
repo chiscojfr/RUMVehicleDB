@@ -37,6 +37,7 @@ class VehicleSeeder extends Seeder
             'license_plate' => 'HQP-342',
             'custodian_id' => '7',
             'department_id' => '4',
+            'was_archived' => false,
 
         ]);
 
@@ -63,6 +64,7 @@ class VehicleSeeder extends Seeder
             'license_plate' => 'HQP-313',
             'custodian_id' => '7',
             'department_id' => '4',
+            'was_archived' => false,
 
         ]);
 
@@ -91,6 +93,7 @@ class VehicleSeeder extends Seeder
                 'license_plate' => 'HQP-313',
                 'custodian_id' => '7',
                 'department_id' => $faker->numberBetween($min = 1, $max = 95),
+                'was_archived' => false,
 
             ]);
         }

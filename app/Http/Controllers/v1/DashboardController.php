@@ -22,6 +22,8 @@ use App\ReportExcelNoReconciliateRecord;
 use App\ReportStatsDetails;
 use Excel;
 use Faker\Factory as Faker;
+use App\Department;
+use App\VehicleType;
 
 class DashboardController extends Controller
 {
@@ -225,7 +227,7 @@ class DashboardController extends Controller
 
             $data = [];
             foreach ($notifications as $notification) {
-                $record = VehicleUsageRecord::where('id', '=', $notification['record_id'])->get()->toArray();
+                $record = $this->cards->getRecordInfo($notification['record_id']);
                 $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
                 $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
 
@@ -297,7 +299,7 @@ class DashboardController extends Controller
     | Generate Monthly Report
     |--------------------------------------------------------------------------
     |
-    | Param: $request (month)
+    | Param: $request (dates)
     | Reutrn: Generated .xls report
     |
     */
@@ -437,9 +439,12 @@ class DashboardController extends Controller
                     $sheet->appendRow(['']);
                     $sheet->setFontSize(15);
                     $sheet->appendRow(['TOTAL PETROLEUM NON RECONCILE RECORDS']);
-                    $currentRow = sizeof($sheet->appendRow(['Date','Purchase Location','Receipt Number', 'Purchase Type', 'Total Liters', 'Total Receipt', 'Card Name','Customer Name'])->toArray());
+                    $currentRow = sizeof($sheet->appendRow(['Date','Purchase Location','Receipt Number', 'Purchase Type', 'Total Liters', 'Total Receipt', 'Card Name','Customer Number', 'Card Last 4 Digits'])->toArray());
                     $sheet->row($currentRow, function($row) { $row->setBackground('#bfff7f'); });
                     $sheet->setFontSize(12);
+                    $sheet->setColumnFormat(array(
+                        'I' => '@'
+                    ));
                     foreach ($data['excel_no_reconciliated_records'] as $record) {
                         $row = [];
                         $row[0] = $record['fecha_de_la_transaccion'];
@@ -450,6 +455,7 @@ class DashboardController extends Controller
                         $row[5] = $record['total_del_solicitante'];
                         $row[6] = $record['nombre_de_la_tarjeta'];
                         $row[7] = $record['cliente'];
+                        $row[8] = $record['ultimos_4_tarjeta'];
                         $sheet->appendRow($row);
                     }
 
@@ -472,20 +478,6 @@ class DashboardController extends Controller
 
         // $faker = Faker::create();
         // dd($faker->password);
-     // $values = [];   
-     // $values = array(
-     //      array('a'=>0, 'x'=>1, 'y'=>2, 'z'=>3),
-     //      array('foo'=>"bar", 'x'=>4, 'y'=>5),
-     //      array('x'=>-1, 'y'=>-2, 'z'=>"baz"),
-     //      array('x'=>-1, 'y'=>-2, 'z'=> array('m'=>123)),
-     //    );
-     // foreach ($values as $value ) {
-     //    dd( $this->has( $value['a'] ) );
-     //    if($t['a'] =! null ){
-
-     //    }
-     // }
-        
 
         $details = ReportStatsDetails::all();
 
@@ -502,6 +494,101 @@ class DashboardController extends Controller
         return response()->json(['data' => $data], 200);
 
 
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generate System Vehicles Report
+    |--------------------------------------------------------------------------
+    |
+    | Param: N/A
+    | Reutrn: Generated .xls report
+    |
+    */
+    public function vehiclesReport(){
+
+        $vehicles = Vehicle::all();
+        $today = Carbon::today()->toDateString();
+        foreach ($vehicles as $vehicle){
+
+            $vehicle_department_name = Department::find($vehicle->department_id)->name;
+            $vehicle->vehicle_department_name =  $vehicle_department_name;
+
+            $vehicle_custodian_name = Custodian::find($vehicle->custodian_id)->name;
+            $vehicle->vehicle_custodian_name =  $vehicle_custodian_name;
+
+            $vehicle_type_name = VehicleType::find($vehicle->type_id)->vehicle_type_name;
+            $vehicle->vehicle_type_name = $vehicle_type_name;
+        }
+
+        Excel::create('Vehicles Report. Generated: '.$today, function($excel) use($vehicles) {
+
+                $excel->sheet('Sheet', function($sheet) use($vehicles) {
+
+                    $sheet->setFontFamily('Arial Rounded MT Bold');
+                    $sheet->setFontSize(20);
+                    $sheet->setFontBold(true);
+                    $sheet->sethorizontalCentered(true);
+
+                    $sheet->mergeCells('A1:N1');
+                    $sheet->mergeCells('A2:N2');
+                    $sheet->setFontSize(18);
+                    $sheet->setAllBorders('thin');
+                    $sheet->mergeCells('A3:N3');
+                    $sheet->mergeCells('A4:N4');
+                    $sheet->mergeCells('A5:N5');
+                    $sheet->row(1, ['UNIVERSIDAD DE PUERTO RICO RECINTO DE MAYAGÜEZ']);
+                    $sheet->row(2, ['Departamento de Transportación']);
+                    $sheet->row(1, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->row(2, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->row(3, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(4, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(5, function($row) { $row->setBackground('#fceb97'); });
+                    
+                    $sheet->row(3, ['']);
+                    $sheet->row(4, ['System Vehicles']);
+
+                    $sheet->setFontSize(15);
+                    $sheet->appendRow(['']);
+                    $currentRow = sizeof($sheet->appendRow(['Make','Model', 'VIN', 'Color', 'Year', 'Vehicle Mileage', 'Serial Number', 'Property Number', 'Marbete Date', 'Inspection Date', 'Decomission Date','Registration ID', 'Title ID', 'Doors', 'Cylinders', 'ACAA', 'Insurance', 'Purchase Price', 'Inscription Date', 'License Plate', 'Department', 'Vehicle Type'])->toArray());
+                    $sheet->row($currentRow, function($row) { $row->setBackground('#bfff7f'); });
+                    $sheet->setFontSize(12);
+                    $sheet->setColumnFormat(array(
+                        'C' => '0'
+                    ));
+
+                    foreach ($vehicles as $vehicle) {
+                        $row = [];
+                        $row[0] = $vehicle['make'];
+                        $row[1] = $vehicle['model'];
+                        $row[2] = $vehicle['vin'];
+                        $row[3] = $vehicle['color'];
+                        $row[4] = $vehicle['year'];
+                        $row[5] = $vehicle['vehicle_mileage'];
+                        $row[6] = $vehicle['serial_number'];
+                        $row[7] = $vehicle['property_number'];
+                        $row[8] = $vehicle['marbete_date'];
+                        $row[9] = $vehicle['inspection_date'];
+                        $row[10] = $vehicle['decomission_date'];
+                        $row[11] = $vehicle['registration_id'];
+                        $row[12] = $vehicle['title_id'];
+                        $row[13] = $vehicle['doors'];
+                        $row[14] = $vehicle['cylinders'];
+                        $row[15] = $vehicle['ACAA'];
+                        $row[16] = $vehicle['insurance'];
+                        $row[17] = $vehicle['purchase_price'];
+                        $row[18] = $vehicle['inscription_date'];
+                        $row[19] = $vehicle['license_plate'];
+                        $row[20] = $vehicle['vehicle_department_name'];
+                        $row[21] = $vehicle['vehicle_type_name'];
+                        $sheet->appendRow($row);
+                    }
+
+                    $sheet->appendRow(['']);
+
+                });
+
+        })->download('xls');
     }
 
 

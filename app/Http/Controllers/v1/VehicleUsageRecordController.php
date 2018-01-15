@@ -369,7 +369,7 @@ class VehicleUsageRecordController extends Controller
                             $entry->save();
                         }
                     }
-
+                    
                     foreach ($no_reconcile_records_excel as $no_reconcile_record){
                         if( ReportExcelNoReconciliateRecord::where('id_de_transaccion', '=', $no_reconcile_record['id_de_transaccion'])->count() == 0  ){
                             $entry = new ReportExcelNoReconciliateRecord();
@@ -382,6 +382,7 @@ class VehicleUsageRecordController extends Controller
                             $entry->pieza = $no_reconcile_record['pieza'];
                             $entry->cantidad_litros = $no_reconcile_record['cantidad'];
                             $entry->total_del_solicitante = $no_reconcile_record['total_del_solicitante'];
+                            $entry->ultimos_4_tarjeta = str_pad($no_reconcile_record['tarjeta'], 4, '0', STR_PAD_LEFT); 
 
                             $entry->save();
                         }

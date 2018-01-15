@@ -23,6 +23,7 @@ class CreateReportExcelNoReconciliatedRecord extends Migration
             $table->string('pieza')->nullable();
             $table->string('cantidad_litros')->nullable();
             $table->string('total_del_solicitante')->nullable();
+            $table->string('ultimos_4_tarjeta')->nullable();
 
             $table->timestamps();
         });

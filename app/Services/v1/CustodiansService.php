@@ -82,6 +82,9 @@ class CustodiansService {
 			$user_type_name = Usertype::find($user->user_type_id)->role;
 	        $user->user_type_name =  $user_type_name;
 
+	        $user_type_name_string = Usertype::find($user->user_type_id)->role_name;
+	        $user->user_type_name_string = $user_type_name_string;
+
 	        $user_department_name = Department::find($user->department_id)->name;
 	        $user->user_department_name =  $user_department_name;
 
@@ -94,6 +97,7 @@ class CustodiansService {
 	                'contact_number' => $user->contact_number,
 	                'employee_id' => $user->employee_id,
 	                'user_type_name' => $user->user_type_name,
+	                'user_type_name_string' => $user->user_type_name_string,
 	                'user_department_name' => $user->user_department_name,
 	                'user_type_id' => $user->user_type_id,
 	                'department_id' => $user->department_id,
@@ -124,6 +128,9 @@ class CustodiansService {
 			$user_type_name = Usertype::find($custodian->user_type_id)->role;
 	        $custodian->user_type_name =  $user_type_name;
 
+	        $user_type_name_string = Usertype::find($custodian->user_type_id)->role_name;
+	        $custodian->user_type_name_string = $user_type_name_string;
+
 	        $user_department_name = Department::find($custodian->department_id)->name;
 	        $custodian->user_department_name =  $user_department_name;
 
@@ -135,6 +142,7 @@ class CustodiansService {
 				'contact_number' => $custodian->contact_number,
 				'employee_id' => $custodian->employee_id,
 				'user_type_name' => $custodian->user_type_name,
+				'user_type_name_string' => $custodian->user_type_name_string,
 				'user_department_name' => $custodian->user_department_name,
 				'user_type_id' => $custodian->user_type_id,
 	            'department_id' => $custodian->department_id,
