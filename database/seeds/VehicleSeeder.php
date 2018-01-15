@@ -15,7 +15,7 @@ class VehicleSeeder extends Seeder
         $faker = Faker::create(); 
 
         DB::table('vehicles')->insert([
-            'make' => 'Toyota-Test',
+            'make' => 'Toyota Test',
             'vin' => '12341234123412341',
             'model' => 'Yaris',
             'color' => 'White',
@@ -30,8 +30,8 @@ class VehicleSeeder extends Seeder
             'title_id' => '389509',
             'doors' => '4',
             'cylinders' => '4',
-            'ACAA' => '1234',
-            'insurance' => 'Guardian',
+            'ACAA' => '35.00',
+            'insurance' => '99.00',
             'purchase_price' => '12000',
             'inscription_date' => '2017-01-01',
             'license_plate' => 'HQP-342',
@@ -41,7 +41,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         DB::table('vehicles')->insert([
-            'make' => 'Mazda-Test',
+            'make' => 'Mazda Test',
             'vin' => '32141234123412341',
             'model' => 'Protege',
             'color' => 'Red',
@@ -56,8 +56,8 @@ class VehicleSeeder extends Seeder
             'title_id' => '12875345',
             'doors' => '4',
             'cylinders' => '4',
-            'ACAA' => '1234',
-            'insurance' => 'Guardian',
+            'ACAA' => '35.00',
+            'insurance' => '99.00',
             'purchase_price' => '12000',
             'inscription_date' => '2017-01-01',
             'license_plate' => 'HQP-313',
@@ -69,7 +69,7 @@ class VehicleSeeder extends Seeder
         for ($i=0; $i < 15; $i++) { 
 
             DB::table('vehicles')->insert([
-                'make' => 'Honda-Test',
+                'make' => 'Honda Test Faker',
                 'vin' => '32141234123412341',
                 'model' => 'Acord',
                 'color' => $faker->colorName,
@@ -84,8 +84,8 @@ class VehicleSeeder extends Seeder
                 'title_id' => '12875345',
                 'doors' => '4',
                 'cylinders' => '4',
-                'ACAA' => '1234',
-                'insurance' => 'Guardian',
+                'ACAA' => '35.00',
+                'insurance' => '99.00',
                 'purchase_price' => '12000',
                 'inscription_date' => '2017-01-01',
                 'license_plate' => 'HQP-313',

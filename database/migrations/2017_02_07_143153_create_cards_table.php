@@ -16,7 +16,7 @@ class CreateCardsTable extends Migration
             $table->increments('id');
             $table->string('number');
             $table->string('name');
-            $table->date('expiry')->nullable();
+            $table->string('expiry')->nullable();
             $table->string('type');
             $table->string('status')->nullable();
             $table->string('cardID');
