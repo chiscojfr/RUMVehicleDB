@@ -12,23 +12,28 @@ class UserTypeSeeder extends Seeder
     public function run()
     {
         DB::table('user_types')->insert([
-            'role' => 'admin'
+            'role' => 'admin',
+            'role_name' => 'Admin'
         ]);
 
         DB::table('user_types')->insert([
-            'role' => 'vehicle_admin'
+            'role' => 'vehicle_admin',
+            'role_name' => 'Vehicle Admin'
         ]);
 
         DB::table('user_types')->insert([
-            'role' => 'custodian'
+            'role' => 'custodian',
+            'role_name' => 'Custodian'
         ]);
 
         DB::table('user_types')->insert([
-            'role' => 'auxiliary_custodian'
+            'role' => 'auxiliary_custodian',
+            'role_name' => 'Auxiliary Custodian'
         ]);
 
         DB::table('user_types')->insert([
-            'role' => 'inactive'
+            'role' => 'inactive',
+            'role_name' => 'Inactive'
         ]);
     }
 }
