@@ -13,12 +13,12 @@ class UserTypeSeeder extends Seeder
     {
         DB::table('user_types')->insert([
             'role' => 'admin',
-            'role_name' => 'Admin'
+            'role_name' => 'Administrator'
         ]);
 
         DB::table('user_types')->insert([
             'role' => 'vehicle_admin',
-            'role_name' => 'Vehicle Admin'
+            'role_name' => 'Vehicle Administrator'
         ]);
 
         DB::table('user_types')->insert([
