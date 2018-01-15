@@ -38,6 +38,10 @@ class CardsService {
 		else{
 
 	        $card->fill($request->all());
+	        $card_temp = Card::find($id);
+	        if(!request()->has('expiry')){
+				$card->expiry = $card_temp->expiry;
+			}
 	        $card->save();
 
 	        return response() -> json(['message' => 'The card has been updated!', 'data' =>$card], 200);

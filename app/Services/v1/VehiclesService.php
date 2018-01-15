@@ -26,7 +26,22 @@ class VehiclesService {
 		}
 		else{
 
-	        $vehicle->fill($request->all());
+			$vehicle->fill($request->all());
+			$vehicle_temp = Vehicle::find($id);
+
+			if(!request()->has('marbete_date')){
+				$vehicle->marbete_date = $vehicle_temp->marbete_date;
+			}
+			if(!request()->has('inspection_date')){
+				$vehicle->inspection_date = $vehicle_temp->inspection_date;
+			}
+			if(!request()->has('decomission_date')){
+				$vehicle->decomission_date = $vehicle_temp->decomission_date;
+			}
+			if(!request()->has('inscription_date')){
+				$vehicle->inscription_date = $vehicle_temp->inscription_date;
+			}
+
 	        $vehicle->save();
 
 	        return response() -> json(['message' => 'The vehicle has been updated!', 'data' =>$vehicle], 200);
