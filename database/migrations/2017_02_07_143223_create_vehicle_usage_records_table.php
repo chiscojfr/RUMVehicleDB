@@ -27,13 +27,13 @@ class CreateVehicleUsageRecordsTable extends Migration
             $table->string('mime')->nullable();
             $table->string('original_filename')->nullable();
 
-            $table->integer('vehicle_id')->unsigned();
+            $table->integer('vehicle_id')->unsigned()->nullable();
             $table->integer('card_id')->unsigned();
             $table->integer('custodian_id')->unsigned();
 
-            $table->foreign('vehicle_id')
-                  ->references('id')
-                  ->on('vehicles')->onDelete('cascade');
+            // $table->foreign('vehicle_id')
+            //       ->references('id')
+            //       ->on('vehicles')->onDelete('cascade');
 
             $table->foreign('card_id')
                   ->references('id')
