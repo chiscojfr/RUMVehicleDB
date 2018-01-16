@@ -71,7 +71,7 @@ class VehicleSeeder extends Seeder
         for ($i=0; $i < 15; $i++) { 
 
             DB::table('vehicles')->insert([
-                'make' => 'Honda Test Faker',
+                'make' => 'Honda Test Faker-'.$i,
                 'vin' => '32141234123412341',
                 'model' => 'Acord',
                 'color' => $faker->colorName,

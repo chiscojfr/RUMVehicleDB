@@ -134,4 +134,24 @@ class CustodianController extends Controller
         }
 
     }
+
+    public function custodianList(){
+        
+        $user = $this->custodians->getAuthenticatedUser();
+
+        if($user->user_type_name == 'admin'){
+            $custodians = Custodian::all();
+            $data = [];
+            foreach ($custodians as $custodian){
+
+                $entry = [
+                    'id' => $custodian->id,
+                    'name' => $custodian->name
+                ];
+                $data[] = $entry;
+            }
+            return $data;
+        }
+    }
+
 }

@@ -57,6 +57,7 @@ Route::group(['prefix' => 'api/v1', 'middleware'=> ['cors','jwt.auth']], functio
 	Route::get('correction-status-types', function(){
 		return App\RecordCorrectionStatus::all();
 	});
+	Route::get('custodians-list', 'v1\CustodianController@custodianList');
 
 });
 
