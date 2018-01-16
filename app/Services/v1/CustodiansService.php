@@ -54,7 +54,25 @@ class CustodiansService {
 
 			$columns = [
 				'department_id',
+				'user_type_id',
+				'is_active'
 			];
+
+			if(request()->has('is_active') ){
+				if(request('is_active') == '1'){
+					$custodian = $custodian->where('user_type_id', '!=', '4');
+					return $this->filterCustodians($custodian->paginate(10));
+				}
+			}
+			else{
+				foreach ($columns as $column) {
+				
+					if(request()->has($column)){
+
+						$custodian = $custodian->where($column, request($column));
+					}
+				}
+			}
 
 			foreach ($columns as $column) {
 				

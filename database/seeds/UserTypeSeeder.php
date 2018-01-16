@@ -26,10 +26,10 @@ class UserTypeSeeder extends Seeder
             'role_name' => 'Custodian'
         ]);
 
-        DB::table('user_types')->insert([
-            'role' => 'auxiliary_custodian',
-            'role_name' => 'Auxiliary Custodian'
-        ]);
+        // DB::table('user_types')->insert([
+        //     'role' => 'auxiliary_custodian',
+        //     'role_name' => 'Auxiliary Custodian'
+        // ]);
 
         DB::table('user_types')->insert([
             'role' => 'inactive',

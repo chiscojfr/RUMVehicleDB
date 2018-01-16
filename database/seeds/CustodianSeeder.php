@@ -91,9 +91,20 @@ class CustodianSeeder extends Seeder
             'department_id' => '2'
         ]);
 
+        DB::table('custodians')->insert([
+                'name' => 'Test-Custodian-Inactive',
+                'email' => $faker->email,
+                'password' => bcrypt($faker->password),
+                'position' => 'Test User',
+                'contact_number' => '00000',
+                'employee_id' => '802000000',
+                'user_type_id' => '4',
+                'department_id' => $faker->numberBetween($min = 1, $max = 95)
+        ]);
+
         for ($i=0; $i < 10; $i++) { 
             DB::table('custodians')->insert([
-                'name' => 'Test-Custodian-Faker',
+                'name' => 'Test-Custodian-Faker-'.$i,
                 'email' => $faker->email,
                 'password' => bcrypt($faker->password),
                 'position' => 'Test User',

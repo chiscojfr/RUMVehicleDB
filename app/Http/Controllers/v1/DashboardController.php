@@ -176,7 +176,6 @@ class DashboardController extends Controller
         if( Notification::where('custodian_id', '=', $user->id)->count() > 0 ){
 
             $notifications = Notification::where('custodian_id', '=', $user->id);
-            ///$notifications = Notification::where('was_archived', '=', 0);
             $unread_notifications_count = $notifications->where('was_read','=','0')->count();
             $notifications = $notifications->get()->toArray();
             $data = [];
@@ -223,7 +222,7 @@ class DashboardController extends Controller
         if($user->user_type_name == 'admin'){
             
             $notifications = Notification::where('was_justified', '=', 1)->get()->toArray();
-            $justified_notifications_count = Notification::where('was_justified', '=', 1)->count();
+            $justified_notifications_count = sizeof($notifications);
 
             $data = [];
             foreach ($notifications as $notification) {
