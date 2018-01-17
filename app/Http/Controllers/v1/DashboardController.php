@@ -86,9 +86,36 @@ class DashboardController extends Controller
         }
 
         $latest_conciliation_date = null;
-        if(ReportStatsDetails::all()->count()){
+        if(ReportStatsDetails::all()->count() > 0){
+
             $latest_conciliation_date = ReportStatsDetails::latest('created_at')->get();
             $latest_conciliation_date = $latest_conciliation_date[0]['created_at']->toDateString();
+
+        }
+
+        $actual_after_conciliation_percent = null;
+        if($latest_conciliation_date != null){
+
+            $latest_conciliation_date_ = ReportStatsDetails::latest('created_at')->get()->toArray();
+            $latest_conciliation_date_ = $latest_conciliation_date_[0]['created_at'];
+            $latest_conciliation_details = ReportStatsDetails::where('created_at', '=', $latest_conciliation_date_)->get()->toArray();
+
+            $latest_conciliation_details_id = $latest_conciliation_details[0]['id'];
+            $latest_conciliation_details_date_from = $latest_conciliation_details[0]['conciliation_date_from'];
+            $latest_conciliation_details_date_to = $latest_conciliation_details[0]['conciliation_date_to'];
+
+            $latest_conciliation_non_reconcile_records_count = Notification::whereBetween('record_date', [$latest_conciliation_details_date_from, $latest_conciliation_details_date_to])->count();
+            $latest_conciliation_approved_records_count = Notification::whereBetween('record_date', [$latest_conciliation_details_date_from, $latest_conciliation_details_date_to])->where('status_type_id', '=', '3')->count();
+
+            //dd($latest_conciliation_approved_records_count/$latest_conciliation_non_reconcile_records_count);
+            $actual_after_conciliation_percent = $latest_conciliation_details[0]['conciliation_percent'] + number_format(( ($latest_conciliation_approved_records_count/$latest_conciliation_non_reconcile_records_count) * ((100 - $latest_conciliation_details[0]['conciliation_percent'])/100) ), 2, '.', '');
+
+            
+            $detail = ReportStatsDetails::find($latest_conciliation_details_id);
+            $detail->after_conciliation_percent = $actual_after_conciliation_percent;
+            $detail->save();
+
+            //dd($actual_after_conciliation_percent);
         }
 
         $stats = [
@@ -96,7 +123,8 @@ class DashboardController extends Controller
             'active_credit_cards' => $cards_count,
             'registered_vehicles' => $vehicles_count,
             'total_monthly_expenses' => $total_monthly_expenses,
-            'latest_conciliation_date' => $latest_conciliation_date
+            'latest_conciliation_date' => $latest_conciliation_date,
+            'actual_after_conciliation_percent' => $actual_after_conciliation_percent
         ];
 
         return response()->json(['stats' => $stats], 200);
@@ -136,11 +164,11 @@ class DashboardController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Custodian Notifications
+    | Get Notifications
     |--------------------------------------------------------------------------
     |
     | Param: n/a
-    | Reutrn: Logged Admin and Custodian Notifications
+    | Reutrn: Logged Admin or Custodian Notifications
     |
     */
     public function getNotifications(){  
@@ -271,6 +299,11 @@ class DashboardController extends Controller
 
             if($user->user_type_name == 'admin'){
                 $notification->fill($request->all());
+                if(request()->has('status_type_id')){
+                    if($request['status_type_id'] == 4){
+                        $notification->was_read = 0;
+                    }
+                }
                 $notification->save();
                 return response() -> json(['message' => 'The notification has been updated!', 'data' =>$notification], 200);
             }
@@ -475,9 +508,6 @@ class DashboardController extends Controller
     */
     public function reportDates(){
 
-        // $faker = Faker::create();
-        // dd($faker->password);
-
         $details = ReportStatsDetails::all();
 
         $data = [];
@@ -518,6 +548,7 @@ class DashboardController extends Controller
 
             $vehicle_type_name = VehicleType::find($vehicle->type_id)->vehicle_type_name;
             $vehicle->vehicle_type_name = $vehicle_type_name;
+
         }
 
         Excel::create('Vehicles Report. Generated: '.$today, function($excel) use($vehicles) {
