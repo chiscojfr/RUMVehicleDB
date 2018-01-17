@@ -201,36 +201,30 @@ class DashboardController extends Controller
 
         $user = $this->cards->getAuthenticatedUser();
 
-        if( Notification::where('custodian_id', '=', $user->id)->count() > 0 ){
+        $notifications = Notification::where('custodian_id', '=', $user->id);
+        $unread_notifications_count = $notifications->where('was_read','=','0')->count();
+        $notifications = $notifications->get()->toArray();
+        $data = [];
+        foreach ($notifications as $notification) {
+            $record = $this->cards->getRecordInfo($notification['record_id']);
+            $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
+            $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
 
-            $notifications = Notification::where('custodian_id', '=', $user->id);
-            $unread_notifications_count = $notifications->where('was_read','=','0')->count();
-            $notifications = $notifications->get()->toArray();
-            $data = [];
-            foreach ($notifications as $notification) {
-                $record = $this->cards->getRecordInfo($notification['record_id']);
-                $notification_type_name = NotificationType::find($notification['notification_type_id'])->notification_type_name;
-                $record_correction_status = RecordCorrectionStatus::find($notification['status_type_id'])->status_type_name;
-
-                $entry =[
-                    'id' => $notification['id'],
-                    'notification_type' => $notification_type_name,
-                    'record_correction_status' => $record_correction_status,
-                    'was_read' => $notification['was_read'],
-                    'was_justified' => $notification['was_justified'],
-                    'due_date' => $notification['due_date'],
-                    'was_archived' => $notification['was_archived'],
-                    'record_id' => $notification['record_id'],
-                    'record_info' => $record,
-                ];
-                $data[] = $entry;
-            }
-          
-            return response()->json(['notifications' => $data, 'unread_notifications_count' => $unread_notifications_count], 200);
+            $entry =[
+                'id' => $notification['id'],
+                'notification_type' => $notification_type_name,
+                'record_correction_status' => $record_correction_status,
+                'was_read' => $notification['was_read'],
+                'was_justified' => $notification['was_justified'],
+                'due_date' => $notification['due_date'],
+                'was_archived' => $notification['was_archived'],
+                'record_id' => $notification['record_id'],
+                'record_info' => $record,
+            ];
+            $data[] = $entry;
         }
-        else{
-            return response()->json(['notifications' => 0], 200);
-        }
+      
+        return response()->json(['notifications' => $data, 'unread_notifications_count' => $unread_notifications_count], 200);
 
     }
 
@@ -405,14 +399,16 @@ class DashboardController extends Controller
                     $sheet->row(7, function($row) { $row->setBackground('#fceb97'); });
                     $sheet->row(8, function($row) { $row->setBackground('#fceb97'); });
                     $sheet->row(9, function($row) { $row->setBackground('#fceb97'); });
+                    $sheet->row(10, function($row) { $row->setBackground('#fceb97'); });
                     
                     $sheet->row(3, ['']);
                     $sheet->row(4, ['Conciliation Report from '.$data['record_stats_details'][0]['formatted_conciliation_dates']]);
                     $sheet->row(5, ['Conciliation Percent: '.$data['record_stats_details'][0]['conciliation_percent'].'%' ]);
-                    $sheet->row(6, ['']);
-                    $sheet->row(7, ['System Transactions: '.$data['record_stats_details'][0]['total_server_records'].' | '.' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_server_records'] ]);
-                    $sheet->row(8, ['                                            VS.']);
-                    $sheet->row(9, ['Total Petroleum Transactions: '.$data['record_stats_details'][0]['total_excel_records'].' | '. ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_excel_records'] ]);
+                    $sheet->row(6, ['After Conciliation Percent: '.$data['record_stats_details'][0]['after_conciliation_percent'].'%' ]);
+                    $sheet->row(7, ['']);
+                    $sheet->row(8, ['System Transactions: '.$data['record_stats_details'][0]['total_server_records'].' | '.' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_server_records'] ]);
+                    $sheet->row(9, ['                                            VS.']);
+                    $sheet->row(10, ['Total Petroleum Transactions: '.$data['record_stats_details'][0]['total_excel_records'].' | '. ' Total expenses: $'.$data['record_stats_details'][0]['total_expenses_in_excel_records'] ]);
 
                     $sheet->setFontSize(15);
                     $sheet->appendRow(['']);

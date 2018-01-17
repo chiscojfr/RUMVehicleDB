@@ -10,18 +10,26 @@ class CustodiansService {
 
 	public function createCustodian($request){
 
-		return Custodian::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-            'position' => $request['position'],
-            'contact_number' => $request['contact_number'],
-            'employee_id' => $request['employee_id'],
-            'user_type_id' => $request['user_type_id'],
-            'department_id' => $request['department_id']
-        ]);
+		$is_unique_email = Custodian::where('email', '=', $request['email'])->count() == 0;
+		
+		if($is_unique_email){	
 
-        return response() -> json(['message' => 'The custodian has been created!'], 200);
+			Custodian::create([
+	            'name' => $request['name'],
+	            'email' => $request['email'],
+	            'password' => bcrypt($request['password']),
+	            'position' => $request['position'],
+	            'contact_number' => $request['contact_number'],
+	            'employee_id' => $request['employee_id'],
+	            'user_type_id' => $request['user_type_id'],
+	            'department_id' => $request['department_id']
+	        ]);
+
+        	return response() -> json(['message' => 'The custodian has been created!'], 201);
+		}
+		else{
+			return response() -> json(['message' => 'duplicated_email'], 403);
+		}
 	}
 
 	public function updateCustodian($request, $id){

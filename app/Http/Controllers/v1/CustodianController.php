@@ -57,9 +57,9 @@ class CustodianController extends Controller
         $user = $this->custodians->getAuthenticatedUser();
         if($user->user_type_name == 'admin'){
 
-            $custodian = $this->custodians->createCustodian($request);
+            return $this->custodians->createCustodian($request);
 
-            return response()->json(['message' => 'Custodian created successfully!',$custodian], 201);
+            //return response()->json(['message' => 'Custodian created successfully!',$custodian], 201);
         }
         else {
             return response()->json(['message' => 'Error: Only Admin can create new custodians.'], 401);
