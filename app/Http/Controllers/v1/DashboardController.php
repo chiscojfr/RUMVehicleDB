@@ -296,6 +296,7 @@ class DashboardController extends Controller
                 if(request()->has('status_type_id')){
                     if($request['status_type_id'] == 4){
                         $notification->was_read = 0;
+                        $notification->was_justified = 0;
                     }
                 }
                 $notification->save();
