@@ -40,19 +40,25 @@ class CustodiansService {
 		}
 		else{
 
-			$is_unique_email = Custodian::where('email', '=', $request['email'])->count() == 0;
-			if($is_unique_email){
-				$user->fill($request->all());
-				if(request()->has('password')){
+			// $is_unique_email = Custodian::where('email', '=', $request['email'])->count() == 0;
+			// if($is_unique_email){
+			// 	$user->fill($request->all());
+			// 	if(request()->has('password')){
+			// 		$user->password = bcrypt($request['password']);
+			// 	}
+				
+		 //        $user->save();
+		 //        return response() -> json(['message' => 'The user has been updated!', 'data' =>$user], 200);
+			// }
+			// else{
+			// 	return response() -> json(['message' => 'duplicated_email'], 403);
+			// }
+			if(request()->has('password')){
 					$user->password = bcrypt($request['password']);
 				}
 				
-		        $user->save();
-		        return response() -> json(['message' => 'The user has been updated!', 'data' =>$user], 200);
-			}
-			else{
-				return response() -> json(['message' => 'duplicated_email'], 403);
-			}
+		     $user->save();
+		     return response() -> json(['message' => 'The user has been updated!', 'data' =>$user], 200);
 			
 
 	        

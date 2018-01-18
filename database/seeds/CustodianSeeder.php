@@ -131,7 +131,7 @@ class CustodianSeeder extends Seeder
             'position' => 'Test User',
             'contact_number' => '2020',
             'employee_id' => '123456',
-            'user_type_id' => '4',
+            'user_type_id' => '3',
             'department_id' => '94'
         ]);
         //12
@@ -142,7 +142,7 @@ class CustodianSeeder extends Seeder
             'position' => 'Test User',
             'contact_number' => '2020',
             'employee_id' => '123456',
-            'user_type_id' => '4',
+            'user_type_id' => '3',
             'department_id' => '70'
         ]);
 
