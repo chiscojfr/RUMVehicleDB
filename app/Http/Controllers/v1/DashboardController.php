@@ -202,7 +202,9 @@ class DashboardController extends Controller
         $user = $this->cards->getAuthenticatedUser();
 
         $notifications = Notification::where('custodian_id', '=', $user->id);
+        //dd($notifications->where('was_read','=','0')->orderBy('created_at', 'desc')->get()->toArray());
         $unread_notifications_count = $notifications->where('was_read','=','0')->count();
+        $notifications = $notifications->orderBy('created_at', 'desc');
         $notifications = $notifications->get()->toArray();
         $data = [];
         foreach ($notifications as $notification) {
@@ -243,7 +245,7 @@ class DashboardController extends Controller
 
         if($user->user_type_name == 'admin'){
             
-            $notifications = Notification::where('was_justified', '=', 1)->get()->toArray();
+            $notifications = Notification::where('was_justified', '=', 1)->orderBy('created_at', 'desc')->get()->toArray();
             $justified_notifications_count = sizeof($notifications);
 
             $data = [];
@@ -293,12 +295,15 @@ class DashboardController extends Controller
 
             if($user->user_type_name == 'admin'){
                 $notification->fill($request->all());
+
+                //If status is approoved by the admin
                 if(request()->has('status_type_id')){
                     if($request['status_type_id'] == 4){
                         $notification->was_read = 0;
                         $notification->was_justified = 0;
                     }
                 }
+
                 $notification->save();
                 return response() -> json(['message' => 'The notification has been updated!', 'data' =>$notification], 200);
             }
