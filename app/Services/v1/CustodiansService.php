@@ -53,6 +53,7 @@ class CustodiansService {
 			// else{
 			// 	return response() -> json(['message' => 'duplicated_email'], 403);
 			// }
+			$user->fill($request->all());
 			if(request()->has('password')){
 					$user->password = bcrypt($request['password']);
 				}
