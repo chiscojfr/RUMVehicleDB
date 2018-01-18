@@ -245,7 +245,8 @@ class DashboardController extends Controller
 
         if($user->user_type_name == 'admin'){
             
-            $notifications = Notification::where('was_justified', '=', 1)->orderBy('created_at', 'desc')->get()->toArray();
+            $notifications = Notification::where('was_justified', '=', 1)->orderBy('created_at', 'desc');
+            $notifications = $notifications->where('status_type_id', '!=', 3)->get()->toArray();
             $justified_notifications_count = sizeof($notifications);
 
             $data = [];
