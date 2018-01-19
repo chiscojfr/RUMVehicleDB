@@ -17,7 +17,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Admin',
             'email' => 'admin@upr.edu',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Master Admin',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -28,7 +28,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Jose F Rodriguez',
             'email' => 'jose@upr.edu',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Web Developer',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -39,7 +39,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Diego Figueroa',
             'email' => 'diego@gmail.com',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Web Developer',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -50,7 +50,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Jan Vega',
             'email' => 'jan@gmail.com',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Web Developer',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -61,7 +61,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Test User Custodian',
             'email' => 'custodian1@upr.edu',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Test User',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -72,7 +72,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Test User Custodian',
             'email' => 'custodian2@upr.edu',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Test User',
             'contact_number' => '2020',
             'employee_id' => '123456',
@@ -83,7 +83,7 @@ class CustodianSeeder extends Seeder
         DB::table('custodians')->insert([
             'name' => 'Test User Vehicle Admin',
             'email' => 'vehicle.admin@upr.edu',
-            'password' => bcrypt('123456'),
+            'password' => bcrypt('abcd1234'),
             'position' => 'Test User',
             'contact_number' => '2020',
             'employee_id' => '123456',
