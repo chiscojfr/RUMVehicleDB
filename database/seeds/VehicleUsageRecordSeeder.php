@@ -24,7 +24,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_mileage' => '33675.2',
             'comments' => 'This is a sample record!',
             'vehicle_id' => '2',
-            'card_id' => '2',
+            'card_id' => '3',
             'custodian_id' => '6',
             'department_id' => '3',
         ]);
@@ -40,7 +40,7 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_mileage' => '33675.2',
             'comments' => 'This is a sample record!',
             'vehicle_id' => '2',
-            'card_id' => '2',
+            'card_id' => '3',
             'custodian_id' => '6',
             'department_id' => '3',
         ]);
@@ -56,8 +56,8 @@ class VehicleUsageRecordSeeder extends Seeder
             'vehicle_mileage' => '33675.2',
             'comments' => 'This is a sample record!',
             'vehicle_id' => '2',
-            'card_id' => '2',
-            'custodian_id' => '7',
+            'card_id' => '3',
+            'custodian_id' => '6',
             'department_id' => '3',
         ]);
         //End testing
