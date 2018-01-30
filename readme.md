@@ -1,9 +1,9 @@
 ## RUM Vehicle API v1
 
-RUM Vehicle API v1 has JWT Authentication [![JWT]](https://jwt.io/introduction/)
+RUM Vehicle API v1 has JWT Authentication, more info at: [[JWT]](https://jwt.io/introduction/)
 
 ## Route List
-[![API Route List]](https://drive.google.com/file/d/1lT28MTg0kFTVCWmoXFowTSkv8VuDQo2K/view?usp=sharing)
+All the api routes with detailed info you will find it at: [[API Route List]](https://drive.google.com/file/d/1lT28MTg0kFTVCWmoXFowTSkv8VuDQo2K/view?usp=sharing)
 
 # Laravel v5.2 PHP Framework
 
