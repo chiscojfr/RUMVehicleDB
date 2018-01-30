@@ -26,7 +26,7 @@ class CustodianSeeder extends Seeder
         ]);
         //2
         DB::table('custodians')->insert([
-            'name' => 'Jose F Rodriguez',
+            'name' => 'Jose Rodriguez',
             'email' => 'jose@upr.edu',
             'password' => bcrypt('abcd1234'),
             'position' => 'Web Developer',
@@ -60,7 +60,7 @@ class CustodianSeeder extends Seeder
         //5
         DB::table('custodians')->insert([
             'name' => 'Test User Custodian',
-            'email' => 'custodian1@upr.edu',
+            'email' => 'custodian@upr.edu',
             'password' => bcrypt('abcd1234'),
             'position' => 'Test User',
             'contact_number' => '2020',
@@ -68,20 +68,20 @@ class CustodianSeeder extends Seeder
             'user_type_id' => '3',
             'department_id' => '5'
         ]);
-        //6
-        DB::table('custodians')->insert([
-            'name' => 'Test User Custodian',
-            'email' => 'custodian2@upr.edu',
-            'password' => bcrypt('abcd1234'),
-            'position' => 'Test User',
-            'contact_number' => '2020',
-            'employee_id' => '123456',
-            'user_type_id' => '3',
-            'department_id' => '6'
-        ]);
+        // //6
+        // DB::table('custodians')->insert([
+        //     'name' => 'Test User Custodian',
+        //     'email' => 'custodian2@upr.edu',
+        //     'password' => bcrypt('abcd1234'),
+        //     'position' => 'Test User',
+        //     'contact_number' => '2020',
+        //     'employee_id' => '123456',
+        //     'user_type_id' => '3',
+        //     'department_id' => '6'
+        // ]);
         //7
         DB::table('custodians')->insert([
-            'name' => 'Test User Vehicle Admin',
+            'name' => 'User Vehicle Admin',
             'email' => 'vehicle.admin@upr.edu',
             'password' => bcrypt('abcd1234'),
             'position' => 'Test User',
@@ -147,29 +147,29 @@ class CustodianSeeder extends Seeder
         ]);
 
 
-        DB::table('custodians')->insert([
-                'name' => 'Test Custodian Inactive',
-                'email' => $faker->email,
-                'password' => bcrypt($faker->password),
-                'position' => 'Test User',
-                'contact_number' => '2020',
-                'employee_id' => '123456',
-                'user_type_id' => '4',
-                'department_id' => $faker->numberBetween($min = 1, $max = 95)
-        ]);
+        // DB::table('custodians')->insert([
+        //         'name' => 'Test Custodian Inactive',
+        //         'email' => $faker->email,
+        //         'password' => bcrypt($faker->password),
+        //         'position' => 'Test User',
+        //         'contact_number' => '2020',
+        //         'employee_id' => '123456',
+        //         'user_type_id' => '4',
+        //         'department_id' => $faker->numberBetween($min = 1, $max = 95)
+        // ]);
 
-        for ($i=0; $i < 10; $i++) { 
-            DB::table('custodians')->insert([
-                'name' => $faker->name,
-                'email' => $faker->email,
-                'password' => bcrypt($faker->password),
-                'position' => 'Test User',
-                'contact_number' => '2020',
-                'employee_id' => '123456',
-                'user_type_id' => '3',
-                'department_id' => $faker->numberBetween($min = 1, $max = 95)
-            ]);
-        }
+        // for ($i=0; $i < 10; $i++) { 
+        //     DB::table('custodians')->insert([
+        //         'name' => $faker->name,
+        //         'email' => $faker->email,
+        //         'password' => bcrypt($faker->password),
+        //         'position' => 'Test User',
+        //         'contact_number' => '2020',
+        //         'employee_id' => '123456',
+        //         'user_type_id' => '3',
+        //         'department_id' => $faker->numberBetween($min = 1, $max = 95)
+        //     ]);
+        // }
 
     }
 }
